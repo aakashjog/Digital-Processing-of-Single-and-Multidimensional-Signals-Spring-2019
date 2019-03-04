@@ -1,0 +1,171 @@
+\documentclass[titlepage, fleqn, a4paper, 12pt, twoside]{article}
+\usepackage{geometry}
+\usepackage{exsheets} %question and solution environments
+\usepackage{amsmath, amssymb, amsthm} %standard AMS packages
+\usepackage[utf8]{inputenc}
+\usepackage{esint} %integral signs
+\usepackage{marginnote} %marginnotes
+\usepackage{gensymb} %miscellaneous symbols
+\usepackage{commath} %differential symbols
+\usepackage{xcolor} %colours
+\usepackage{cancel} %cancelling terms
+\usepackage[free-standing-units,space-before-unit]{siunitx} %formatting units
+	\sisetup
+	{
+		per-mode=fraction,
+		fraction-function=\frac
+	}
+\usepackage{tikz, pgfplots} %diagrams
+	\usetikzlibrary{calc, hobby, patterns, intersections, angles, quotes, spy}
+	\usetikzlibrary{circuits.logic.US,circuits.logic.IEC}
+\usepackage{graphicx} %inserting graphics
+\usepackage{imakeidx}
+\makeindex
+\usepackage{hyperref} %hyperlinks
+\usepackage{datetime} %date and time
+\usepackage{enumerate, enumitem} %numbered lists
+\usepackage{float} %inserting floats
+\usepackage[american voltages]{circuitikz} %circuit diagrams
+\usepackage{setspace} %double spacing
+\usepackage{microtype} %micro-typography
+\usepackage{listings} %formatting code
+	\lstset{language=Matlab}
+	\lstdefinestyle{standardMatlab}
+	{
+		belowcaptionskip=1\baselineskip,
+		breaklines=true,
+		frame=L,
+		xleftmargin=\parindent,
+		language=C,
+		showstringspaces=false,
+		basicstyle=\footnotesize\ttfamily,
+		keywordstyle=\bfseries\color{green!40!black},
+		commentstyle=\itshape\color{purple!40!black},
+		identifierstyle=\color{blue},
+		stringstyle=\color{orange},
+	}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{todonotes}
+\usepackage[noabbrev,capitalize]{cleveref}
+\usepackage[section]{placeins}
+\usepackage[style=numeric, backend=biber]{biblatex}
+\usepackage{adjustbox}
+\usepackage{algpseudocode} %algorithms
+\usepackage{algorithm} %algorithms
+
+% \bibliography{<mybibfile>}% ONLY selects .bib file; syntax for version <= 1.1b
+\addbibresource{bibliography.bib}% Syntax for version >= 1.2
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}} %adds numbers to specific equations in non-numbered list of equations
+
+\DeclareMathAlphabet{\mathcal}{OT1}{pzc}{m}{it}
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{theorem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{law}{Law}
+
+\tikzset{
+block/.style = {draw, rectangle, minimum height=3em, minimum width=3em},
+tmp/.style  = {coordinate},
+sum/.style = {draw, circle, node distance=1cm},
+input/.style = {coordinate},
+output/.style = {coordinate},
+pinstyle/.style = {pin edge={to-,thin,black}}
+}
+
+\makeatletter
+\@addtoreset{section}{part} %resets section numbers in new part
+\makeatother
+
+\newcommand\blfootnote[1]{%
+	\begingroup
+	\renewcommand\thefootnote{}\footnote{#1}%
+	\addtocounter{footnote}{-1}%
+	\endgroup
+}
+
+\renewcommand{\marginfont}{\scriptsize \color{blue}}
+
+\renewcommand{\tilde}{\widetilde}
+
+\def\doubleunderline#1{\underline{\underline{#1}}}
+
+\SetupExSheets{solution/print = true} %prints all solutions by default
+
+\DeclareMathOperator{\FT}{\mathcal{F}}
+\DeclareMathOperator{\IFT}{\mathcal{F}^{-1}}
+\DeclareMathOperator{\DFT}{\mathcal{DFT}}
+
+\DeclareMathOperator{\Q}{\mathcal{Q}}
+
+\DeclareMathOperator{\rect}{\mathrm{rect}}
+\DeclareMathOperator{\sinc}{\mathrm{sinc}}
+
+\DeclareMathOperator{\boxfunc}{\mathrm{box}}
+
+\DeclareMathOperator{\vspan}{\mathrm{span}}
+
+\DeclareMathOperator{\argmin}{\mathrm{argmin}}
+
+\DeclareMathOperator{\Db}{\mathrm{Db}}
+
+\DeclareMathOperator{\normal}{\mathrm{N}}
+
+\DeclareMathOperator{\expct}{\mathrm{E}}
+
+\DeclareMathOperator{\sgn}{\mathrm{sgn}}
+
+\def\transpose#1{{#1}^{\mathsf{T}}}
+\def\minustranspose#1{{#1}^{\mathsf{-T}}}
+
+\def\downsample#1{\downarrow_{#1}}
+\def\upsample#1{\uparrow_{#1}}
+
+%opening
+\title{Digital Processing of Single and Multidimensional Signals}
+\author{Aakash Jog}
+\date{2018-19}
+
+\begin{document}
+
+\pagenumbering{roman}
+\begin{titlepage}
+\newgeometry{margin=0cm}
+\maketitle
+\end{titlepage}
+\restoregeometry
+%\setlength{\mathindent}{0pt}
+
+\blfootnote
+{
+	\begin{figure}[H]
+		\includegraphics[height = 12pt]{cc.pdf}
+		\includegraphics[height = 12pt]{by.pdf}
+		\includegraphics[height = 12pt]{nc.pdf}
+		\includegraphics[height = 12pt]{sa.pdf}
+	\end{figure}
+	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by-nc-sa/4.0/}.
+} %CC-BY-NC-SA license
+
+\tableofcontents
+
+\clearpage
+\section{Lecturer Information}
+
+\textbf{Dr. Raja Giryes}\\
+~\\
+E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
+~\\
+
+\clearpage
+\pagenumbering{arabic}
+
+\clearpage
+\printindex
+
+\end{document}
