@@ -120,6 +120,11 @@ pinstyle/.style = {pin edge={to-,thin,black}}
 
 \DeclareMathOperator{\sgn}{\mathrm{sgn}}
 
+\DeclareMathOperator{\dist}{\mathrm{d}}
+
+\DeclareMathOperator{\nullspace}{\mathrm{N}}
+\DeclareMathOperator{\range}{\mathrm{R}}
+
 \def\transpose#1{{#1}^{\mathsf{T}}}
 \def\minustranspose#1{{#1}^{\mathsf{-T}}}
 
@@ -164,6 +169,435 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 
 \clearpage
 \pagenumbering{arabic}
+
+\part{Basic Definition and Theorems}
+
+\begin{definition}[Fourier transform]
+	For an LTI system, the Fourier transform is defined as
+	\begin{align*}
+		\FT\left\{ x(t) \right\} &= \left\langle x,e^{2 \pi j f t} \right\rangle\\
+		&= \int\limits_{t \in \mathrm{R}^d} x(t) \overline{e^{2 \pi j f t}} \dif t\\
+		&= \int\limits_{t \in \mathrm{R}^d} x(t) e^{-2 \pi j \transpose{f} t} \dif t
+	\end{align*}
+	\label{def:Fourier_transform}
+	\index{transform!Fourier!continuous time}
+\end{definition}
+
+\begin{definition}[Tensor product]
+	\begin{align*}
+		(x_1 \otimes \dots \otimes x_d)(t) &= x_1(t_1) \cdot \dots \cdot x_d(t_d)
+	\end{align*}
+	for $t \in R^d$.
+	\index{product!tensor}
+\end{definition}
+
+\begin{definition}[Fourier transform of tensor product]
+	The Fourier transform of a tensor product is defined as
+	\begin{align*}
+		\FT\left\{ x_1 \otimes \dots \otimes x_d \right\}(f) &= \int\limits_{R^d} x_1(t_1) \cdot \dots \cdot x_d(t_d) e^{-2 \pi j (t_1 f_1 + \dots + t_d f_d)} \dif t_1 \dots \dif t_d\\
+		&= \left( \FT\left\{ x_1(t) \right\}(f_1) \right) \dots \left( \FT\left\{ x_d(t) \right\}(f_d) \right)
+	\end{align*}
+	\index{transform!Fourier!continuous time}
+	\index{product!tensor}
+\end{definition}
+
+\begin{definition}[$\rect$]
+	\begin{align*}
+		\rect(t) &=
+			\begin{cases}
+				0 &;\quad |t| > \frac{1}{2}\\
+				1 &;\quad |t| < \frac{1}{2}\\
+			\end{cases}
+	\end{align*}
+	\index{standard functions!rect}
+\end{definition}
+
+\begin{definition}[$u_{[a,b]}$]
+	\begin{align*}
+		u_{[a,b]}(t) &=
+			\begin{cases}
+				1 &;\quad a \le t \le b\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}
+	\end{align*}
+	\index{standard functions!u@$u_{[a,b]}$}
+\end{definition}
+
+\begin{definition}[$\sinc$]
+	\begin{align*}
+		\sinc(t) &= \frac{\sin(\pi t)}{\pi t}
+	\end{align*}
+	\index{standard functions!sinc}
+\end{definition}
+
+\begin{theorem}
+	\begin{align*}
+		\FT\left\{ \rect(t) \right\} &= \sinc(f)
+	\end{align*}
+	\index{standard functions!rect}
+	\index{standard functions!sinc}
+\end{theorem}
+
+\begin{definition}[$\boxfunc$]
+	A box function is defined to be the product of rect functions in multiple dimensions.
+	\begin{align*}
+		\boxfunc(t_1,\dots,t_n) &= \rect(t_1) \cdot \dots \cdot \rect(t_n)\\
+		&=
+			\begin{cases}
+				1 &;\quad |t_1| < \frac{1}{2}, \dots, |t_n| < \frac{1}{2}\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}
+	\end{align*}
+	\index{standard functions!box}
+	\index{standard functions!rect}
+\end{definition}
+
+\begin{definition}[Signum function]
+	The signum function is defined to be
+	\begin{align*}
+		\sgn(t) &=
+			\begin{cases}
+				1 &;\quad t > 0\\
+				[-1,1] &;\quad t = 0\\
+				-1 &;\quad t < 0\\
+			\end{cases}
+	\end{align*}
+	\index{standard functions!sgn}
+\end{definition}
+
+\begin{theorem}[Shifting in time]
+	\begin{align*}
+		\FT\left\{ D_p\left( x(t) \right) \right\}(f) &= e^{-2 \pi j \transpose{f} p} \FT\left\{ x(t) \right\}(f)
+	\end{align*}
+	where
+	\begin{align*}
+		D_p\left( x(t) \right) &= x(t - p)
+	\end{align*}
+	\label{thm:shifting_in_time}
+	\index{shift!in time}
+\end{theorem}
+
+\begin{theorem}
+	\begin{align*}
+		x(t) \ast h(t) &= \FT{x}(f) \FT{h}(f)
+	\end{align*}
+	\label{thm:convolution_in_time_multiplication_in_frequency}
+	\index{convolution!in time}
+	\index{multiplication!in frequency}
+\end{theorem}
+
+\begin{theorem}[Stretching in time]
+	\begin{align*}
+		\FT\left\{ S_A\left( x(t) \right) \right\}(f) &= \int\limits_{R^d} x(A t) e^{-j 2 \pi \transpose{f} t} \dif t\\
+		&= \int\limits_{R^d} x(q) ^{-j 2 \pi \transpose{f} A^{-1} q} \frac{\dif q}{|\det A|}\\
+		&= \frac{1}{|\det A|} \int\limits_{R^d}  x(q) e^{-j 2 \pi \left( \minustranspose{A} f \right)^T q} \dif q\\
+		&= \frac{\FT\left\{ x(t) \right\}\left( \minustranspose{A} f \right)}{|\det A|}\\
+		&= \frac{S_{\minustranspose{A}} X(f)}{|\det A|}
+	\end{align*}
+	where
+	\begin{align*}
+		S_A\left( x(t) \right) &= x(A t)
+	\end{align*}
+	where $A$ is a matrix which may represent stretching, rotating, etc.\\
+	Hence, if $A$ is equal to a scalar $a$,
+	\begin{align*}
+		\FT\left\{ x(a t) \right\} &= \frac{\FT\left\{ x(t) \right\}\left( \frac{f}{a} \right)}{|a|}
+	\end{align*}
+	\label{thm:stretching_in_time}
+	\index{stretch!in time}
+\end{theorem}
+
+\begin{theorem}[Fourier transform of Gaussian]
+	Using \cref{thm:stretching_in_time}, for a single dimensional Gaussian signal,
+	\begin{align*}
+		\FT\left\{ e^{-t^2} \right\} &= e^{-\pi f^2}
+	\end{align*}
+	and for a orthogonal multidimensional Gaussian,
+	\begin{align*}
+		\FT\left\{ e^{-\transpose{t} t} \right\} &= e^{-\pi \transpose{f} f}
+	\end{align*}
+	Hence, using \cref{thm:stretching_in_time}, for a general multidimensional Gaussian,
+	\begin{align*}
+		\FT\left\{ e^{-\transpose{t} C^{-1} t} \right\} &= e^{-\pi \transpose{f} C f} |\det C|
+	\end{align*}
+	where $C$ is the covariance matrix.
+	\label{thm:Fourier_transform_of_Gaussian}
+	\index{transform!Fourier!continuous time}
+	\index{standard functions!Gaussian}
+\end{theorem}
+
+\begin{definition}[Unitary matrix]
+	A matrix $A$ is said to be unitary if
+	\begin{align*}
+		A^{-1} &= A^*
+	\end{align*}
+	where $A^*$ is the conjugate transpose of $A$.
+	\index{types of matrices!unitary}
+	\index{conjugate transpose}
+\end{definition}
+
+\begin{theorem}[Rotation]
+	Stretching with by a unitary matrix $A$ is equivalent to rotation, and hence denoting $S_A$ by $R_R$,
+	\begin{align*}
+		\FT\left\{ R_R\left( x(t) \right) \right\} &= R_R \FT\left\{ x(t) \right\}
+	\end{align*}
+	\label{thm:rotation}
+	\index{stretch!in time}
+	\index{rotation!in time}
+\end{theorem}
+
+\begin{definition}
+	A dimension-reducing projection $P$ from $R^d$ to $R^{d - 1}$, is defined as
+	\begin{align*}
+		P\left( x(t) \right) &= \int\limits_{R^d} x(t_1,\dots,t_d) \dif t_d
+	\end{align*}
+	\index{projection!dimension-reducing}
+\end{definition}
+
+\begin{definition}
+	The slicing operator $\Q$ is defined as
+	\begin{align*}
+		\Q\left\{ X(f_1,\dots,f_d) \right\} &= X\left( f_1,\dots,f_{d - 1},0 \right)
+	\end{align*}
+	\label{def:slicing_operator}
+	\index{standard operators!slicing}
+\end{definition}
+
+\begin{theorem}[Fourier transform of dimension reducing projection]
+	The Fourier transform of a dimension reducing projection is
+	\begin{align*}
+		\FT\left\{ P\left( x(t) \right) \right\} &= \int\limits_{R^{d - 1}} \left( \int\limits_{R^d} x(t_1,\dots,t_d) \dif t_d \right) e^{-j 2 \pi (t_1 f_1 + \dots + t_{d - 1} f_{d - 1})} \dif t_1 \dots \dif t_{d - 1}\\
+		&= \int\limits_{R^{d - 1}} \left( \int\limits_{R^d} x(t_1,\dots,t_d) e^{-j 2 \pi t_d (0)} \dif t_d \right) e^{-j 2 \pi (t_1 f_1 + \dots + t_{d - 1} f_{d - 1})} \dif t_1 \dots \dif t_{d - 1}\\
+		&= \int\limits_{R^d} x(t) e^{-j 2 \pi \transpose{f} t} \dif t \Big|_{f_d = 0}\\
+		&= \FT\left\{ x(t) \right\}(f_1,\dots,f_{d - 1},0)\\
+		&= \Q\left\{ \FT\left\{ x(t) \right\} \right\}
+	\end{align*}
+	where $\Q$ is the slicing operator as in \cref{def:slicing_operator}.
+	\label{thm:Fourier_transform_of_dimension_reducing_projection}
+	\index{projection!dimension-reducing}
+	\index{transform!Fourier!continuous time}
+\end{theorem}
+
+\clearpage
+\part{Hilbert Spaces}
+
+\section{Inner Product Spaces}
+
+\begin{definition}[Inner product spaces]
+	An inner product space is defined to be a space with an inner product with the following properties.
+	\begin{description}
+		\item[Conjugate symmetry]
+			\begin{align*}
+				\langle x,y \rangle &= \langle y,x \rangle^*
+			\end{align*}
+		\item[Linearity]
+			\begin{align*}
+				\langle x , a y + b z \rangle &= a \langle x,y \rangle + b \langle x,z \rangle
+			\end{align*}
+		\item[Non-negativity]
+			\begin{equation*}
+				\langle x,x \rangle = 0 \iff x = 0
+			\end{equation*}
+	\end{description}
+	\index{spaces!inner product}
+\end{definition}
+
+\begin{definition}[Norm and distance]
+	The norm corresponding to an inner product space is defined to be
+	\begin{align*}
+		\|x\| &= \sqrt{\langle x,x \rangle}
+	\end{align*}
+	Hence, the distance between $x$ and $y$ is defined to be
+	\begin{align*}
+		\dist(x,y) &= \|x - y\|
+	\end{align*}
+	\index{norm}
+	\index{distance}
+\end{definition}
+
+\begin{definition}[Hilbert space]
+	An inner product, normed, complete vector space is said to be a Hilbert space.
+	\index{spaces!Hilbert}
+\end{definition}
+
+\section{Operators and Transformations}
+
+\begin{theorem}
+	Let $M$ be an operator from the inner product space $H$ to the inner product space $S$.
+	Then,
+	\begin{align*}
+		\langle M x , y \rangle &= \langle x , M^* y \rangle
+	\end{align*}
+	for all $x \in H$ and $y \in S$.
+	If $H$ and $S$ are finite, then $M$ can be represented by a matrix and
+	\begin{align*}
+		M^* &= \overline{M^T}
+	\end{align*}
+	is the complex transpose of $M$.
+	\index{operators}
+\end{theorem}
+
+\begin{definition}[Linear operator]
+	An operator $T$ is said to be linear if
+	\begin{align*}
+		T(a_1 x_1 + a_2 x_2) &= a_1 T(x_1) + a_2 T(x_2)
+	\end{align*}
+	\index{types of operators!linear}
+\end{definition}
+
+\begin{theorem}[Bounded linear operation]
+	All linear operators are bounded, i.e. for every $T$, there exists $\alpha$ such that
+	\begin{align*}
+		\left\| T(x) \right\| &\le \alpha \|x\|
+	\end{align*}
+	for all $x$.
+	\index{types of operators!linear}
+\end{theorem}
+
+\begin{theorem}[Continuous linear operation]
+	If there exists a sequence $x_i$ which converges to $x$, then for any linear operator $T$, the sequence $T(x_i)$ converges to $T(x)$.
+	\index{types of operators!linear}
+\end{theorem}
+
+\begin{definition}[Unitary operator]
+	An operator $T$ is said to be unitary if and only if
+	\begin{align*}
+		T T^* &= T^* T\\
+		&= I
+	\end{align*}
+	where $T^*$ is the conjugate transpose of $T$.
+	\index{types of operators!unitary}
+\end{definition}
+%
+\begin{definition}[Hermitian operator]
+	An operator $T$ is said to be Hermitian if and only if
+	\begin{align*}
+		T^* &= T
+	\end{align*}
+	where $T^*$ is the conjugate transpose of $T$.
+	\index{types of operators!Hermitian}
+\end{definition}
+
+\begin{theorem}
+	An operator $T$ from a Hilbert space $H$ to $H$ is Hermitian if and only if
+	\begin{align*}
+		\langle T x , x \rangle &\in \mathbb{R}
+	\end{align*}
+	for all $x \in H$.
+	\index{types of operators!Hermitian}
+\end{theorem}
+
+\begin{definition}[Orthogonal complement of subspace]
+	The orthogonal complement of a subspace $W$ is defined to be
+	\begin{align*}
+		W^{\perp} &= \left\{ x \Big| \langle x,y \rangle = 0 \quad \forall y \in W \right\}
+	\end{align*}
+	\index{orthogonal complement}
+\end{definition}
+
+\begin{definition}[Null space of linear operator]
+	The null space of a linear operator $T : H \to S$ is defined to be
+	\begin{align*}
+		\nullspace(T) &= \left\{ x \Big| T x = 0 \right\}\\
+		&\subseteq H
+	\end{align*}
+	\index{null space}
+\end{definition}
+
+\begin{definition}[Range of linear operator]
+	The range of a linear operator $T : H \to S$ is defined to be
+	\begin{align*}
+		\range(T) &= \left\{ y \Big| T x = y \, , \, x \in H \right\}\\
+		&\subseteq S
+	\end{align*}
+	\index{range}
+\end{definition}
+
+\begin{definition}[Direct sum]
+	The direct sum of two sets $A$ and $B$ is defined to be the set
+	\begin{align*}
+		C &= A \oplus B
+	\end{align*}
+	if and only if, for all $c \in C$, there exists a unique pair $a \in A$ and $b \in B$ such that
+	\begin{align*}
+		c &= a + b
+	\end{align*}
+	\index{direct sum}
+\end{definition}
+
+\begin{theorem}
+	For a linear operator $T: H \to S$,
+	\begin{align*}
+		H &= \nullspace(T) \oplus \nullspace(T)^{\perp}
+	\end{align*}
+	where $\nullspace(T)$ is the null space of $T$.\\
+	Additionally, if $S$ is a closed set,
+	\begin{align*}
+		S &= \range(T)^{C} \oplus \range(T)^{\perp}
+	\end{align*}
+	where
+	\begin{align*}
+		\range(T)^{C} &= \left( \range(T)^{\perp} \right)^{\perp}
+	\end{align*}
+	is the closure of $R(T)$.
+	\index{null space}
+	\index{closure}
+\end{theorem}
+
+\begin{definition}[Injective transformation]
+	A linear transformation/operation $T: H \to S$ is said to be injective (one-to-one) if
+	\begin{align*}
+		x \neq y &\iff T x \neq T(y)
+	\end{align*}
+	\index{injectivity}
+	\index{one-to-one}
+\end{definition}
+
+\begin{definition}[Surjective transformation]
+	A linear transformation/operation $T: H \to S$ is said to be surjective (onto) if
+	\begin{align*}
+		R(T) &= S
+	\end{align*}
+	\index{surjectivity}
+	\index{onto}
+\end{definition}
+
+\begin{definition}[Bijective transformation]
+	A linear transformation/operation $T: H \to S$ is said to be bijective if it is injective (one-to-one) and surjective (onto).
+	\index{bijectivity}
+	\index{one-to-one and onto}
+\end{definition}
+
+\section{Singular Value Decomposition (SVD)}
+
+\begin{definition}[Eigenvalue decomposition]
+	The eigenvalue decomposition for a symmetric (and hence also square) and Hermitian matrix $A$ is
+	\begin{align*}
+		A &= V \Lambda V^*
+	\end{align*}
+	where $\Lambda$ is a diagonal matrix with the eigenvalues of $A$ as diagonal elements, and $V$ contains the corresponding eigenvectors of $A$.
+	\index{decomposition!eigenvalue}
+\end{definition}
+
+\begin{definition}[Singular Value Decomposition (SVD)]
+	Let $A \in \mathbb{R}^{m \times n}$.
+	Then, the singular value decomposition of $A$ is defined to be
+	\begin{align*}
+		A &= U \Sigma V^*
+	\end{align*}
+	where the diagonal elements of $\Sigma$ are the singular values of $A$, and the remaining elements of $\Sigma$ are zero.\\
+	The columns of $V$ are called the right singular vectors, the columns of $U$ are called the left singular vectors, and the diagonal elements of $\Sigma$ are denoted by $\sigma_i$, where $1 \le i \le \min(m,n)$.
+	\index{decomposition!singular value}
+\end{definition}
+
+\begin{theorem}
+	\begin{align*}
+		{\sigma_i}^2 &= \lambda_i \left( A^* A \right)
+	\end{align*}
+	where $\sigma_i$ are the singular values of $A$, and $\lambda_i$ are the eigenvalues of $A$, for $1 \le i \le \min(m,n)$.
+	\index{decomposition!eigenvalue}
+	\index{decomposition!singular value}
+\end{theorem}
 
 \clearpage
 \printindex
