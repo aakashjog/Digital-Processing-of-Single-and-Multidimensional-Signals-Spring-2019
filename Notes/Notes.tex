@@ -125,6 +125,9 @@ pinstyle/.style = {pin edge={to-,thin,black}}
 \DeclareMathOperator{\nullspace}{\mathrm{N}}
 \DeclareMathOperator{\range}{\mathrm{R}}
 
+\DeclareMathOperator{\rank}{\mathrm{rank}}
+\DeclareMathOperator{\diag}{\mathrm{diag}}
+
 \def\transpose#1{{#1}^{\mathsf{T}}}
 \def\minustranspose#1{{#1}^{\mathsf{-T}}}
 
@@ -166,6 +169,13 @@ pinstyle/.style = {pin edge={to-,thin,black}}
 ~\\
 E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 ~\\
+
+\section{Grading}
+
+\begin{enumerate}
+	\item Homework (MATLAB or NumPy): 20\%
+	\item Final exam: 80\%
+\end{enumerate}
 
 \clearpage
 \pagenumbering{arabic}
@@ -459,6 +469,15 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\index{types of operators!linear}
 \end{theorem}
 
+\begin{definition}[Adjoint of linear operation]
+	The adjoint of a linear operation $T$ is defined to be $T^*$, the only bounded operation such that
+	\begin{align*}
+		\langle T x , y \rangle &= \langle x , T^* y \rangle
+	\end{align*}
+	for all $x \in H$, $y \in S$.\\
+	\index{adjoint of linear operation}
+\end{definition}
+
 \begin{definition}[Unitary operator]
 	An operator $T$ is said to be unitary if and only if
 	\begin{align*}
@@ -468,7 +487,7 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	where $T^*$ is the conjugate transpose of $T$.
 	\index{types of operators!unitary}
 \end{definition}
-%
+
 \begin{definition}[Hermitian operator]
 	An operator $T$ is said to be Hermitian if and only if
 	\begin{align*}
@@ -524,6 +543,23 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\end{align*}
 	\index{direct sum}
 \end{definition}
+
+\begin{theorem}
+	For any linear operator $T$,
+	\begin{align*}
+		\nullspace\left( T^* \right) &= {R(T)}^{\perp}\\
+		\range\left( T^* \right) &= {N(T)}^{\perp}
+	\end{align*}
+	\index{null space}
+	\index{range}
+\end{theorem}
+
+\begin{theorem}
+	\begin{align*}
+		\nullspace(T) &= \nullspace\left( T^* T \right)
+	\end{align*}
+	\index{null space}
+\end{theorem}
 
 \begin{theorem}
 	For a linear operator $T: H \to S$,
@@ -598,6 +634,312 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\index{decomposition!eigenvalue}
 	\index{decomposition!singular value}
 \end{theorem}
+
+\begin{definition}[Rank of transformation]
+	The rank of a transformation $T$ is the dimension of its range, i.e.
+	\begin{align*}
+		\rank(T) &= \dim\left( \range(T) \right)
+	\end{align*}
+	\index{rank}
+\end{definition}
+
+\begin{theorem}
+	The rank of a matrix $A$ is the number of non-zero singular values of $A$.
+	\index{rank}
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		A x &= \left( U \Sigma V^* \right) x\\
+		A x &= (U \Sigma) \left( V^* x \right)\\
+		&= U \Sigma
+			\begin{bmatrix}
+				\langle x,v_1 \rangle & \dots & \langle x,v_n \rangle
+			\end{bmatrix}\\
+		&= \sum\limits_{i = 1}^{\min(m,n)} \sigma_i \langle x,v_i \rangle u_i
+	\end{align*}
+	Hence, any $A x$ can be expressed as a linear combination of some $u_i$ for $i \le r$.
+	Therefore, the range of $A$ is spanned by $u_i$.
+	Hence, by definition, the rank of $A$ is $r$.\\
+	Also, only the $u_i$s with corresponding non-zero $\sigma_i$s can span $\range(A)$.
+	Hence, equivalently, the rank of $A$ is the number of non-zero $\sigma_i$s of $A$.
+\end{proof}
+
+\begin{theorem}
+	\begin{align*}
+		\nullspace(A) &= \vspan\left\{ v_i \Big| \sigma_i = 0 \right\}
+	\end{align*}
+	Equivalently,
+	\begin{align*}
+		\nullspace(A) &= \vspan\left\{ v_i \Big| i > r \right\}
+	\end{align*}
+	where
+	\begin{align*}
+		r &= \rank(A)
+	\end{align*}
+	Hence,
+	\begin{align*}
+		\nullspace(A)^{\perp} &= \vspan\left\{ v_i \Big| \sigma_i \neq 0 \right\}
+	\end{align*}
+	where $A \in \mathbb{R}^{m \times n}$.
+\end{theorem}
+
+\begin{theorem}
+	\begin{align*}
+		\range(A) &= \vspan\left\{ u_i \Big| \sigma_i \neq 0 \right\}
+	\end{align*}
+	Equivalently,
+	\begin{align*}
+		\range(A) &= \vspan\left\{ u_i \Big| i \le r \right\}
+	\end{align*}
+	where
+	\begin{align*}
+		r &= \rank(A)
+	\end{align*}
+	Hence,
+	\begin{align*}
+		\range(A)^{\perp} &= \vspan\left\{ u_i \Big| i > r \right\}
+	\end{align*}
+	and equivalently
+	\begin{align*}
+		\range(A)^{\perp} &= \vspan\left\{ u_i \Big| \sigma_i = 0 \right\}
+	\end{align*}
+\end{theorem}
+
+\section{Pseudoinverse}
+
+\begin{definition}[Moore-Penrose pseudoinverse]
+	The Moore-Penrose pseudoinverse of $A \in \mathbb{R}^{m \times n}$ is defined to be $A^{\dagger}$, such that
+	\begin{align*}
+		A A^{\dagger} &= I
+	\end{align*}
+	if $A$ is of full rank, and
+	\begin{align*}
+		A^{\dagger} A &= I
+	\end{align*}
+	if $m > n$.
+	\index{pseudoinverse}
+\end{definition}
+
+\begin{theorem}
+	If the SVD of $A$ is
+	\begin{align*}
+		A &= U \Sigma V^*\\
+		&= U \diag(\sigma_1,\dots,\sigma_m) V^*
+	\end{align*}
+	then the pseudoinverse of $A$ is
+	\begin{align*}
+		A^{\dagger} &= V \diag\left( \frac{1}{\sigma_1},\dots,\frac{1}{\sigma_n} \right) U^*
+	\end{align*}
+	where if $\sigma_i = 0$ then $\frac{1}{\sigma_i}$ is replaced by $0$.
+	\index{pseudoinverse}
+\end{theorem}
+
+\section{Set Transformations}
+
+\begin{definition}[Set transformation]
+	A set transformation $X : l_2 \to H$ composed of $x_1,\dots,x_n \in H$, is defined as
+	\begin{align*}
+		X a &= \sum a_i x_i
+	\end{align*}
+	where
+	\begin{align*}
+		l_2 &= \left\{ a_i \Big| \sum |a_i|^2 < \infty \right\}
+	\end{align*}
+	is the standard $l_2$ space, and $H$ is a Hilbert space.
+	If $n$ is finite, then $X$ is a matrix with columns $x_1,\dots,x_n$.
+	\index{set transformation}
+\end{definition}
+
+\begin{definition}[Linear independence]
+	The set $\{x_i\}$ is said to be linearly independent if and only if
+	\begin{align*}
+		\sum a_i x_i &= 0
+	\end{align*}
+	implies $a_i = 0$, $\forall i$.\\
+	Equivalently, the set $\{x_i\}$ is said to be linearly independent if and only if
+	\begin{align*}
+		N(X) &= \{0\}
+	\end{align*}
+	\index{linear independence}
+\end{definition}
+
+\begin{theorem}
+	A set of orthogonal vectors/functions with positive norm is always linearly independent.
+	\index{linear independence}
+	\index{orthogonality}
+\end{theorem}
+
+\begin{definition}[Completeness]
+	As set $\{x_i \in H\}$ is said to be complete if and only if $H$ is the closure of the set spanned by $x_i$, i.e.
+	\begin{align*}
+		\overline{\vspan{x_i}} &= H
+	\end{align*}
+	Equivalently, for any $x \in H$, $\exists \varepsilon > 0$ such that
+	\begin{align*}
+		\left\| x - \sum\limits_{i = 1}^{n} a_i x_i \right\| &< \varepsilon
+	\end{align*}
+	for a large enough $n$.
+	\index{completeness}
+\end{definition}
+
+\begin{theorem}
+	The adjoint operator of an operator $X : l_2 \to H$ is $X^* : H \to l_2$ such that
+	\begin{align*}
+		X^* x &= \left\{ \langle x_i , x \rangle_{H} \right\}
+	\end{align*}
+	where $x_i$ are such that
+	\begin{align*}
+		X &= \{x_i\}
+	\end{align*}
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		\langle X a , x \rangle_{H} &= \left\langle \sum a_i x_i , x \right\rangle_{H}\\
+		&= \sum {a_i}^* \langle x_i , x \rangle_{H}
+	\end{align*}
+	Also, by definition,
+	\begin{align*}
+		\langle X a , x \rangle_{H} &= \left\langle a , X^* x \right\rangle_{l_2}
+	\end{align*}
+	Hence,
+	\begin{align*}
+		\sum {a_i}^* \langle x_i , x \rangle_{H} &= \left\langle a , X^* x \right\rangle_{l_2}\\
+		\therefore \left\langle a , \left\{ \langle x_i , x \right\} \right\rangle_{H} &= \left\langle a , X^* x \right\rangle_{l_2}
+	\end{align*}
+	Hence,
+	\begin{align*}
+		X^* x &= \left\{ \langle x_i , x \rangle_{H} \right\}
+	\end{align*}
+\end{proof}
+
+\section{Basis}
+
+\begin{definition}[Schauter basis]
+	A set $\{x_i\} \in H$ is said to be a Schauter basis of $H$ if for any $x \in H$, there are unique coefficients $a_i$ such that
+	\begin{align*}
+		x &= \sum\limits_{i = 1}^{n} a_i x_i
+	\end{align*}
+	where $n$ is the dimension of $H$, and may be infinite.
+	\index{basis!Schauter}
+\end{definition}
+
+\begin{definition}[Riesz basis]
+	A set $\{x_i\} \in H$ is said to be a Riesz basis of $H$ if it is complete in $H$ and there exist $0 < A \le B < \infty$ such that
+	\begin{eqnarray*}
+		A \|a\|^2 \le \left\| \sum a_i x_i \right\|^2 \le B \|a\|^2\\
+		A \|x\|^2 \le \left\| \sum \langle x , x_i \rangle \right\|^2 \le B \|x\|^2
+	\end{eqnarray*}
+	Equivalently for $X : l_2 \to H$ corresponding to $\{x_i\} \in H$,
+	\begin{eqnarray*}
+		A \langle a , a \rangle \le \langle X a , X a \rangle \le B \langle a , a \rangle\\
+		A x^* x \le x^* X X^* x \le B x^* x
+	\end{eqnarray*}
+	\index{basis!Riesz}
+\end{definition}
+
+\begin{theorem}
+	Any orthogonal basis is also a Riesz basis.
+\end{theorem}
+
+\begin{theorem}
+	The elements of a Riesz basis are linearly independent.
+	\index{basis!Riesz}
+\end{theorem}
+
+\begin{theorem}
+	If
+	\begin{equation*}
+		A I_{l_2} \le X^* X \le B I_{l_2}
+	\end{equation*}
+	that is,
+	\begin{equation*}
+		A \|a\|^2 \le \left\| \sum a_i x_i \right\|^2 \le B \|a\|^2\\
+	\end{equation*}
+	then, $X^* X$ is invertible, and
+	\begin{align*}
+		\frac{1}{B} I_{l_2} \le \left( X^* X \right)^{-1} \le \frac{1}{A} I_{l_2}
+	\end{align*}
+	\index{basis!Riesz}
+\end{theorem}
+
+\begin{theorem}
+	If $X$ is a Riesz basis, then $\range(X)$ is closed.
+	\index{basis!Riesz}
+\end{theorem}
+
+\begin{definition}[Bi-orthogonal basis]
+	The bi-orthogonal basis of a Riesz $X$ is defined to be
+	\begin{align*}
+		\tilde{X} &= X \left( X^* X \right)^{-1}
+	\end{align*}
+	Hence,
+	\begin{align*}
+		\tilde{X} X^* &= I
+	\end{align*}
+	\index{basis!Riesz}
+	\index{basis!bi-orthogonal}
+\end{definition}
+
+\begin{theorem}
+	The bi-orthogonal basis of a Riesz basis is also a Riesz basis.
+	\index{basis!Riesz}
+	\index{basis!bi-orthogonal}
+\end{theorem}
+
+\begin{theorem}
+	For a Riesz basis $\{x_i\}$ of $H$, any $x = X a$ for $x \in H$ can be expressed as a linear combination of $H$ such that
+	\begin{align*}
+		x &= X a\\
+		&= \sum a_i x_i\\
+		&= \sum \left\langle \tilde{x_i} , x \right\rangle x_i
+	\end{align*}
+	where $\left\{ \tilde{x_i} \right\} = \tilde{X}$ is the bi-orthogonal basis of $X$.
+	\index{basis!Riesz}
+	\index{basis!bi-orthogonal}
+\end{theorem}
+
+\begin{proof}
+	Let
+	\begin{align*}
+		x &= \sum a_i x_i\\
+		&= \sum \left\langle \tilde{x_i} , x \right\rangle x_i
+	\end{align*}
+	Also,
+	\begin{align*}
+		\left\langle \tilde{x_i} , x \right\rangle &= \left\langle \tilde{x_i} , \sum\limits_{j = -\infty}^{\infty} a_j x_j \right\rangle\\
+		&= \sum\limits_{j = -\infty}^{\infty} a_j \left\langle \tilde{x_i} , x_j \right\rangle
+	\end{align*}
+	Hence,
+	\begin{align*}
+		a_i &= \left\langle \tilde{x_i} , x \right\rangle\\
+		&= \sum\limits_{j = -\infty}^{\infty} a_j \left\langle \tilde{x_i} , x_j \right\rangle
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\left\langle \tilde{x_i} , x_j \right\rangle &= \delta_{i,j}
+	\end{align*}
+	Hence, for $\tilde{X} = \left\{ \tilde{x_i} \right\}$,
+	\begin{align*}
+		\tilde{X}^* X &= I
+	\end{align*}
+	Hence, $\tilde{X}$ is the bi-orthogonal basis of $X$.
+\end{proof}
+
+\section{Projections}
+
+\begin{definition}[Projection]
+	The operator $T$ is said to be a projection if
+	\begin{align*}
+		T T &= T
+	\end{align*}
+	that is
+	\begin{align*}
+		T^2 &= T
+	\end{align*}
+	\index{projection}
+\end{definition}
 
 \clearpage
 \printindex
