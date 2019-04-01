@@ -1221,6 +1221,350 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\index{Shannon's Interpolation Formula}
 \end{theorem}
 
+\section{Generalized Sampling}
+
+\begin{theorem}
+	Let $\{x_n\}$ be a Riesz basis.
+	Then, the corresponding coefficients $a_n$ are
+	\begin{align*}
+		a_n &= \left\langle g(t - n T) , x(t) \right\rangle\\
+		&= \int\limits_{-\infty}^{\infty} g^*(t - n T) x(t) \dif t\\
+		&= \left( g^*(-t) \ast x(t) \right)(n T)
+	\end{align*}
+	Hence, generalized sampling can be performed by convolving the signal $x(t)$ with $g^*(-n t)$.
+	Also,
+	\begin{align*}
+		x &= X \left( X^* X \right)^{-1} X^* x\\
+		&= X \left( X^* X \right)^{-1} \{a_n\}
+	\end{align*}
+	Hence, the signal can be reconstructed by passing the samples through a digital filter $\left( X^* X \right)^{-1}$, multiplying by a delta train $\sum \delta(t - n T)$, and convolving with $g(t)$.
+\end{theorem}
+
+\begin{proof}
+	Let $\{x_n\}$ be a Riesz basis and let $X$ be the corresponding set transformation, i.e. for $c_n \in \l2$,
+	\begin{align*}
+		x &= X c\\
+		&= \sum c_n x_n\\
+		&= \sum \left\langle \tilde{x_n} , x \right\rangle x_n
+	\end{align*}
+	where $\left\{ \tilde{x_n} \right\}$ is the bi-orthogonal basis of $X$.
+	For standard sampling with $\sinc$s, i.e., for
+	\begin{align*}
+		x_n &= \sinc\left( t - \frac{n}{T} \right)
+	\end{align*}
+	as $\{x_n\}$ is an orthogonal basis,
+	\begin{align*}
+		\tilde{x_n} &= x_n\\
+		&= \sinc\left( t - \frac{n}{T} \right)
+	\end{align*}
+	and hence the samples are
+	\begin{align*}
+		c_n &= \left\langle \sinc\left( t - \frac{n}{T} \right) , x \right\rangle\\
+		&= \int\limits_{-\infty}^{\infty} \sinc\left( t - \frac{n}{T} \right) x(t) \dif t\\
+		&= \int\limits_{-\frac{T}{2}}^{\frac{T}{2}} x(f) e^{-2 \pi j \frac{n}{T} f} \dif f
+	\end{align*}
+	If $x$ is band limited,
+	\begin{align*}
+		x(f) &= 0
+	\end{align*}
+	for $|f| > \frac{1}{2}$.
+	Therefore,
+	\begin{align*}
+		c_n &= \int\limits_{-\frac{1}{2 T}}^{\frac{1}{2 T}} x(f) e^{-2 \pi j \frac{n}{T} f} \dif f\\
+		&= \int\limits_{-\infty}^{\infty} x(f) e^{-2 \pi j \frac{n}{T} f} \dif f\\
+		&= \IFT\left\{ x(f) e^{-2 \pi j \frac{n}{T} f} \right\} \Big|_{t = 0}\\
+		&= x\left( t + \frac{n}{T} \right) \Big|_{t = 0}\\
+		&= x\left( \frac{n}{T} \right)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		x &= \sum c_n x_n\\
+		&= \sum \left\langle \sinc\left( t - \frac{n}{T} \right) , x \right\rangle \sinc\left( t - \frac{n}{T} \right)\\
+		&= \sum x\left( \frac{n}{T} \right) \sinc\left( t - \frac{n}{T} \right)\\
+		&= \left( \sum x\left( \frac{n}{T} \right) \delta\left( t - \frac{n}{T} \right) \right) \ast \sinc(t)
+	\end{align*}
+\end{proof}
+
+\begin{definition}[Discrete time Fourier transform]
+	The discrete time Fourier transform of a signal is defined to be
+	\begin{align*}
+		X\left( e^{j 2 \pi f} \right) &= \sum\limits_{n = -\infty}^{\infty} x(n T) e^{-j 2 \pi f n T}
+	\end{align*}
+	\index{transform!Fourier!discrete time}
+\end{definition}
+
+\begin{theorem}[Poisson summation formula]
+	\begin{align*}
+		\FT\left\{ x(t) \right\} &= \DTFT\left\{ x(n T) \right\}\\
+	\end{align*}
+	i.e.
+	\begin{align*}
+		\sum\limits_{n = -\infty}^{\infty} X\left( f + \frac{n}{T} \right) &= T \sum\limits_{n = -\infty}^{\infty} x(n T) e^{-j 2 \pi n T f}\\
+	\end{align*}
+	\index{transform!Fourier!continuous time}
+	\index{transform!Fourier!discrete time}
+	\index{Poisson summation formula}
+	\label{thm:Poisson_summation_formula}
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		\sum\limits_{n = -\infty}^{\infty} X\left( f + \frac{n}{T} \right) &= \sum\limits_{n = -\infty}^{\infty} \int\limits_{-\infty}^{\infty} x(t) e^{-j 2 \pi \left( f + \frac{n}{T} \right) t} \dif t\\
+		&= \int\limits_{-\infty}^{\infty} \left( x(t) \sum\limits_{n = -\infty}^{\infty} e^{-j 2 \pi \frac{n}{T} t} \right) e^{-j 2 \pi f t} \dif t\\
+		&= \int\limits_{-\infty}^{\infty} \left( x(t) T \sum\limits_{n = -\infty}^{\infty} \delta(t - n T) \right) e^{-j 2 \pi f t} \dif t\\
+		&= T \int\limits_{-\infty}^{\infty} \left( x(t) \sum\limits_{n = -\infty}^{\infty} \delta(t - n T) \right) e^{-j 2 \pi f t} \dif t\\
+		&= T \sum\limits_{n = -\infty}^{\infty} x(n T) \int\limits_{-\infty}^{\infty} \delta(t - n T) e^{-j 2 \pi f t} \dif t\\
+		&= T \sum\limits_{n = -\infty}^{\infty} x(n T) e^{-j 2 \pi f n T}
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	\begin{align*}
+		\sum\limits_{n = -\infty}^{\infty} S^*\left( f - \frac{n}{T} \right) G\left( f - \frac{n}{T} \right) &= T \DTFT\left\{ \left( s^*(-t) \ast g(t) \right) \Big|_{t = n T} \right\}
+	\end{align*}
+	\index{transform!Fourier!discrete time}
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		&\quad \sum\limits_{n = -\infty}^{\infty} S^*\left( f - \frac{n}{T} \right) G\left( f - \frac{n}{T} \right)\\
+		&= \int\limits_{-\infty}^{\infty} \left( \sum\limits_{n = -\infty}^{\infty} \left( s^*(-t) \ast g(t) \right) e^{j 2 \pi \frac{n}{T} t} \right) e^{-j 2 \pi f t} \dif t\\
+		&= \int\limits_{-\infty}^{\infty} \left( s^*(t) \ast g(t) \right) \sum\limits_{n = -\infty}^{\infty} \delta(t - n T) e^{-j 2 \pi f t} \dif t\\
+		&= T \int\limits_{-\infty}^{\infty} \left( s^*(-t) \ast g(t) \right) \sum\limits_{n = -\infty}^{\infty} \delta(t - n T) e^{-j 2 \pi f t} \dif t\\
+		&= T \sum\limits_{n = -\infty}^{\infty} \left( s^*(-t) \ast g(t) \right) \Big|_{t = n T} e^{-j 2 \pi f n T}\\
+		&= T \DTFT\left\{ \left( s^*(-t) \ast g(t) \right) \Big|_{t = n T} \right\}
+	\end{align*}
+\end{proof}
+
+\begin{definition}[Shift invariant Riesz basis]
+	A Riesz basis $\{x_n\}$ is said to be a shift invariant Riesz basis if
+	\begin{align*}
+		x_n &= g(t - n T)
+	\end{align*}
+\end{definition}
+
+\begin{theorem}[Generalized sampling and reconstruction]
+	Let $\{x_n\}$ be a shift invariant Riesz basis.
+	Then, the corresponding coefficients $a_n$ are
+	\begin{align*}
+		a_n &= \left\langle g(t - n T) , x(t) \right\rangle\\
+		&= \int\limits_{-\infty}^{\infty} g^*(t - n T) x(t) \dif t\\
+		&= \left( g^*(-t) \ast x(t) \right)(n T)
+	\end{align*}
+	Hence, generalized sampling can be performed by convolving the signal $x(t)$ with $g^*(-n t)$.
+	Also,
+	\begin{align*}
+		x &= X \left( X^* X \right)^{-1} X^* x\\
+		&= X \left( X^* X \right)^{-1} \{a_n\}
+	\end{align*}
+	Hence, the signal can be reconstructed by passing the samples through a digital filter $\left( X^* X \right)^{-1}$, multiplying by a delta train $\sum \delta(t - n T)$, and convolving with $g(t)$.
+	\label{thm:generalized_sampling_and_reconstruction}
+\end{theorem}
+
+\begin{theorem}
+	Let $X : \l2 \to H$ be a set transformation corresponding to shift invariant functions
+	\begin{align*}
+		x_i &= g(t - i)
+	\end{align*}
+	Then, $X = \{x_i\}$ is a Riesz basis if and only if
+	\begin{equation*}
+		A \le \sum\limits_{n = -\infty}^{\infty} \left| G(f - n) \right|^2 \le B
+	\end{equation*}
+\end{theorem}
+
+\begin{proof}
+	Let $T = 1$.
+	Therefore,
+	\begin{align*}
+		\left\| \sum\limits_{n = -\infty}^{\infty} c_n g(t - n) \right\|^2 &= \sum\limits_{n = -\infty}^{\infty} \sum\limits_{m = -\infty}^{\infty} {c_n}^* c_m \int\limits_{-\infty}^{\infty} g^*(t - n) g(t - m) \dif t
+	\end{align*}
+	Hence, substituting $t' = t - n$,
+	\begin{align*}
+		\left\| \sum\limits_{n = -\infty}^{\infty} c_n g(t - n) \right\|^2 &= \sum\limits_{n = -\infty}^{\infty} \sum\limits_{m = -\infty}^{\infty} {c_n}^* c_m \int\limits_{-\infty}^{\infty} g^*(t') g(t' - m + n) \dif t'
+	\end{align*}
+	Hence, substituting $k = m - n$,
+	\begin{align*}
+		\left\| \sum\limits_{n = -\infty}^{\infty} c_n g(t - n) \right\|^2 &= \sum\limits_{n = -\infty}^{\infty} \sum\limits_{k = -\infty}^{\infty} {c_n}^* c_{n + k} \int\limits_{-\infty}^{\infty} g^*(t') q(t' - k) \dif t'
+	\end{align*}
+	Hence, by Parseval's Identity,
+	\begin{align*}
+		\left\| \sum\limits_{n = -\infty}^{\infty} c_n g(t - n) \right\|^2 &= \int\limits_{-\infty}^{\infty} \sum\limits_{k = -\infty}^{\infty} \left( \sum\limits_{n = -\infty}^{\infty} {c_n}^* c_{n + k} \right) e^{-j 2 \pi f k} \left| G(f) \right|^2 \dif f
+	\end{align*}
+	Let
+	\begin{align*}
+		q_k &= \sum\limits_{n = -\infty}^{\infty} {c_n}^* c_{n + k}\\
+		&= {c_n}^* \ast c_{-n}\\
+		\therefore \DTFT\left\{ q[k] \right\} &= \DTFT\left\{ {c[n]}^* c[n + k] \right\}\\
+		&= \DTFT\left\{ {c[n]}^* \right\} \DTFT\left\{ c[n + k] \right\}\\
+		\therefore Q\left( e^{j 2 \pi f} \right) &= C\left( e^{-j 2 \pi f} \right) C^*\left( e^{-j 2 \pi f} \right)\\
+		&= \left| C\left( e^{-j 2 \pi f} \right)^2 \right|
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\left\| \sum\limits_{n = -\infty}^{\infty} c_n g(t - n) \right\|^2 &= \int\limits_{-\infty}^{\infty} \sum\limits_{k = -\infty}^{\infty} q_k e^{-j 2 \pi f k} \left| G(f) \right|^2 \dif f\\
+		&= \int\limits_{-\infty}^{\infty} Q\left( e^{j 2 \pi f t} \right) \left| G(f) \right|^2 \dif t\\
+		&= \int\limits_{-\infty}^{\infty} \left| C\left( e^{-j 2 \pi f t} \right) \right|^2 \left| G(f) \right|^2 \dif f\\
+		&= \sum\limits_{n = -\infty}^{\infty} \int\limits_{-\frac{1}{L}}^{\frac{1}{L}} \left| G(f - n) \right|^2 \left| C\left( e^{-j 2 \pi f} \right) \right|^2 \dif f\\
+		&= \int\limits_{-\frac{1}{L}}^{\frac{1}{L}} \left| C\left( e^{-j 2 \pi f} \right) \right|^2 \sum\limits_{n = -\infty}^{\infty} \left| G(f - n) \right|^2 \dif f
+	\end{align*}
+	Hence, for $x_n$ to form a Riesz basis, $c_n$ must satisfy
+	\begin{equation*}
+		A \int\limits_{-\frac{1}{L}}^{\frac{1}{L}} \left| C\left( e^{-j 2 \pi f} \right) \right|^2 \le \int\limits_{-\frac{1}{L}}^{\frac{1}{L}} \left| C\left( e^{-j 2 \pi f} \right) \right|^2 \sum\limits_{n = -\infty}^{\infty} \left| G(f - n) \right|^2 \dif f \le B \int\limits_{-\frac{1}{L}}^{\frac{1}{L}} \left| C\left( e^{-j 2 \pi f} \right) \right|^2 \dif f
+	\end{equation*}
+	which holds if and only if
+	\begin{equation*}
+		A \le \sum\limits_{n = -\infty}^{\infty} \left| G(f - n) \right|^2 \le B
+	\end{equation*}
+\end{proof}
+
+\begin{theorem}
+	Let $X : \l2 \to H$ be a set transformation corresponding to shift invariant functions
+	\begin{align*}
+		x_i &= g(t - i)
+	\end{align*}
+	Then, a generalized sampling and reconstruction using these basis elements can be performed as in \cref{fig:generalized_sampling_and_reconstruction}.
+	\begin{figure}[H]
+		\centering
+		\begin{adjustbox}{max width=\columnwidth}
+		\begin{tikzpicture}[auto, node distance=2cm,]
+			\node [block] (sampler) {$g(-t)$};
+			\node [block, right = of sampler] (digital_filter) {$\left( X^* X \right)^{-1} = \frac{1}{\sum\limits_{n = -\infty}^{\infty} \left| G(f - n) \right|^2}$};
+			\node [mixer, right = of digital_filter] (mixer) {};
+			\node [block, right = of mixer] (reconstructor) {$g(t)$};
+
+			\draw [stealth-] (sampler.west) -- ++(-1,0) node [left] {$x(t)$};
+			\draw (sampler.east) to [switch] ++(1,0) [-stealth] -- (digital_filter.west) node [midway, above] {$c[n]$};
+			\draw [-stealth] (digital_filter.east) -- (mixer.west) node [midway, above] {$d[n]$};
+			\draw [stealth-] (mixer.south) -- ++(0,-1) node [below] {$\sum\limits_{n = -\infty}^{\infty} \delta(t - n)$};
+			\draw [-stealth] (mixer.east) -- (reconstructor.west) node [right] {};
+			\draw [-stealth] (reconstructor.east) -- ++(1,0) node [right] {$\tilde{x}(t)$};
+		\end{tikzpicture}
+		\end{adjustbox}
+		\caption{Generalized Sampling and Reconstruction}
+		\label{fig:generalized_sampling_and_reconstruction}
+	\end{figure}
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		c_i &= \left\langle x_i , \sum\limits_{n = -\infty}^{\infty} x_n d_n \right\rangle\\
+		&= \left\langle g(t - i) , \sum\limits_{n = -\infty}^{\infty} d_n g(t - n) \right\rangle\\
+		&= \sum\limits_{n = -\infty}^{\infty} d_n \left\langle g(t - i) , g(t - n) \right\rangle\\
+		&= \sum\limits_{n = -\infty}^{\infty} d_n \int\limits_{-\infty}^{\infty} g(t - i)^* g(t - n) \dif t
+	\end{align*}
+	Substituting $t' = t - i$,
+	\begin{align*}
+		c_i &= \sum\limits_{n = -\infty}^{\infty} d_n \int\limits_{-\infty}^{\infty} {g(t')}^* g(t' - n + i) \dif t'
+	\end{align*}
+	Let
+	\begin{align*}
+		y(t) &= g^*(t) \ast g(-t)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		c_i &= \sum\limits_{n = -\infty}^{\infty} d_n y(i - n)\\
+		&= (d \ast y)[i]
+	\end{align*}
+	Hence,
+	\begin{align*}
+		c[n] &= d[i] \ast y[i]
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		C\left( e^{j 2 \pi f} \right) &= D\left( e^{j 2 \pi f} \right) \DTFT\left\{ y[n] \right\}\\
+		&= D\left( e^{j 2 \pi f} \right) \DTFT\left\{ g^*(t) \ast g(-t) \right\}\\
+		&= D\left( e^{j 2 \pi f} \right) \sum\limits_{n = -\infty}^{\infty} G^*(f - n) G(f - n)\\
+		&= D\left( e^{j 2 \pi f} \right) \sum\limits_{n = -\infty}^{\infty} \left| G(f - n) \right|^2
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		D\left( e^{j 2 \pi f} \right) &= \frac{1}{\sum\limits_{n = -\infty}^{\infty} \left| G(f - n) \right|^2} C\left( e^{j 2 \pi f} \right)
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	Let $X : \l2 \to H$ and $S : \l2 \to H$ be a set transformations corresponding to shift invariant functions
+	\begin{align*}
+		x_i &= g(t - i)
+	\end{align*}
+	and
+	\begin{align*}
+		y_i &= s(t - i)
+	\end{align*}
+	respectively.
+	Then, if $S^* X$ is invertible, a generalized sampling and reconstruction using these basis elements can be performed as in \cref{fig:generalized_sampling_and_reconstruction_with_different_sampling_and_reconstruction_bases}.
+	\begin{figure}[H]
+		\centering
+		\begin{adjustbox}{max width=\columnwidth}
+		\begin{tikzpicture}[auto, node distance=2cm,]
+			\node [block] (sampler) {$s(-t)$};
+			\node [block, right = of sampler] (W) {$W = \left( S^* X \right)^{-1}$};
+			\node [mixer, right = of W] (mixer) {};
+			\node [block, right = of mixer] (reconstructor) {$g(t)$};
+
+			\draw [stealth-] (sampler.west) -- ++(-1,0) node [left] {$x(t)$};
+			\draw (sampler.east) to [switch] ++(1,0) [-stealth] -- (W.west) node [midway, above] {$c[n]$};
+			\draw [-stealth] (W.east) -- (mixer.west) node [midway, above] {$d[n]$};
+			\draw [stealth-] (mixer.south) -- ++(0,-1) node [below] {$\sum\limits_{n = -\infty}^{\infty} \delta(t - n)$};
+			\draw [-stealth] (mixer.east) -- (reconstructor.west) node [right] {};
+			\draw [-stealth] (reconstructor.east) -- ++(1,0) node [right] {$\tilde{x}(t)$};
+		\end{tikzpicture}
+		\end{adjustbox}
+		\caption{Generalized Sampling and Reconstruction with Different Sampling and Reconstruction Bases}
+		\label{fig:generalized_sampling_and_reconstruction_with_different_sampling_and_reconstruction_bases}
+	\end{figure}
+\end{theorem}
+
+\begin{theorem}
+	Let $\{s_n\}$ and $\{g_n\}$ span the Riesz bases $S$ and $X$ respectively.
+	Assume
+	\begin{align*}
+		H &= {\range(S)}^{\perp} \cup \range(X)
+	\end{align*}
+	Then, $S^* X : \l2 \to \l2$ is invertible iff
+	\begin{align*}
+		{\range(S)}^{\perp} \cap \range(X) &= \{0\}
+	\end{align*}
+	Hence,
+	\begin{align*}
+		H &= {\range(S)}^{\perp} \oplus X
+	\end{align*}
+\end{theorem}
+
+\section{Common Shift Invariant Riesz Bases}
+
+\begin{definition}[Spline]
+	A spline of order $n$ is defined as
+	\begin{align*}
+		x(t) &= \sum\limits_{k = -\infty}^{\infty} d_k \beta^n(t - k)
+	\end{align*}
+	where
+	\begin{align*}
+		\beta^0(t) &=
+			\begin{cases}
+				1 &;\quad |t| < 0.5\\
+				\frac{1}{2} &;\quad |t| = 0.5\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}\\
+		\beta^n(t) &= \beta^0(t) \ast \beta^{n - 1}(t)
+	\end{align*}
+	Hence, splines are a shift invariant Riesz basis.
+	\index{spline}
+\end{definition}
+
+\begin{definition}[Lanczos interpolation]
+	Lanczos interpolation with parameter $a$ is defined with basis elements $g(t)$ such that
+	\begin{align*}
+		g(t) &=
+			\begin{cases}
+				\sinc(t) \sinc\left( \frac{t}{a} \right) &;\quad |t| < a\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}
+	\end{align*}
+	Hence, the basis is a shift invariant Riesz basis.
+	\index{Lanczos interpolation}
+\end{definition}
+
 \clearpage
 \printindex
 
