@@ -1566,6 +1566,413 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 \end{definition}
 
 \clearpage
+\part{Resampling}
+
+\section{Downsampling}
+
+\begin{definition}[Downsampling operator]
+	The downsampling operator $\downarrow$ is defined such that if
+	\begin{align*}
+		g &= \downsample{M} f
+	\end{align*}
+	then
+	\begin{align*}
+		g[n] &= f[M n]
+	\end{align*}
+	\index{downsampling}
+\end{definition}
+
+\begin{theorem}
+	\begin{align*}
+		\downsample{M} (\alpha f + \beta g) &= \alpha \downsample{M} f + \beta \downsample{M} g
+	\end{align*}
+	\index{downsampling}
+\end{theorem}
+
+\begin{theorem}
+	\begin{align*}
+		\downsample{M_1} \downsample{M_2} f &= \downsample{M_1 M_2} f
+	\end{align*}
+	\index{downsampling}
+\end{theorem}
+
+\begin{theorem}
+	Let $D_p$ be a translation operator, i.e.
+	\begin{align*}
+		D_p f[n] &= f[n - p]
+	\end{align*}
+	Then,
+	\begin{align*}
+		D_p \downsample{M} f &= \downsample{M} D_{M p} f
+	\end{align*}
+	\index{downsampling}
+\end{theorem}
+
+\begin{theorem}
+	Let $H$ be an LTI filter.
+	Then,
+	\begin{align*}
+		H \downsample{M} &= \downsample{M} G
+	\end{align*}
+	where
+	\begin{align*}
+		G &= \sum\limits_{m = -\infty}^{\infty} h[m] D_{M m}
+	\end{align*}
+	with impulse response
+	\begin{align*}
+		g[m] &=
+			\begin{cases}
+				h\left[ \frac{m}{M} \right] &;\quad \frac{m}{M} \in \mathbb{Z}\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}
+	\end{align*}
+	where $h[n]$ is the impulse response of $H$.
+	Also,
+	\begin{align*}
+		G(f) &= H(M f)
+	\end{align*}
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		(H f)[n] &= (h \ast f)[n]\\
+		&= \sum\limits_{m = -\infty}^{\infty} h[m] f[n - m]\\
+		&= \left( \sum\limits_{m = -\infty}^{\infty} h[m] \delta[n - m] \right) \ast f[n]\\
+		&= \left( \sum\limits_{m = -\infty}^{\infty} h[m] D_n \right) f[n]
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		H \downsample{M} &= \sum\limits_{m = -\infty}^{\infty} h[m] (D_M \downsample{M})\\
+		&= \sum\limits_{m = -\infty}^{\infty} (\downsample{M} D_{M m})\\
+		&= \downsample{M} \left( \sum\limits_{m = -\infty}^{\infty} h[m] D_{M m} \right)\\
+		&= \downsample{M} G
+	\end{align*}
+	where
+	\begin{align*}
+		G &= \sum\limits_{m = -\infty}^{\infty} h[m] D_{M m}
+	\end{align*}
+	Hence,
+	\begin{align*}
+		G &= \sum\limits_{m = -\infty}^{\infty} h[m] D_{M m}\\
+		&= \sum\limits_{\frac{m'}{M} = -\infty}^{\infty} h\left[ \frac{m'}{M} \right] D_{m'}
+	\end{align*}
+	Hence,
+	\begin{align*}
+		g[m] &=
+			\begin{cases}
+				h\left[ \frac{m}{M} \right] &;\quad \frac{m}{M} \in \mathbb{Z}\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}
+	\end{align*}
+	Hence,
+	\begin{align*}
+		G(f) &= \sum\limits_{n = -\infty}^{\infty} g[n] e^{-2 \pi j f n}\\
+		&= \sum\limits_{n = -\infty}^{\infty} h[n] e^{-2 \pi j f M n}\\
+		&= H(M f)
+	\end{align*}
+\end{proof}
+
+\begin{theorem}[Noble Identity for Downsampling]
+	\begin{align*}
+		h \ast (\downsample{M} f) &= \downsample{M} \left( (\upsample{M} h) \ast f \right)
+	\end{align*}
+	Equivalently, downsampling by $M$ and then applying $H(f)$ is equivalent to applying $H(f)$ and then downsampling by $M$.
+	\index{Noble Identity!downsampling}
+	\label{thm:Noble_identity_for_downsampling}
+\end{theorem}
+
+\section{Upsampling}
+
+\begin{definition}[Upsampling operator]
+	The upsampling operator $\uparrow$ is defined such that if
+	\begin{align*}
+		g &= \upsample{M} f
+	\end{align*}
+	then
+	\begin{align*}
+		g[n] &=
+			\begin{cases}
+				f\left[ \frac{n}{M} \right] &;\quad \frac{n}{M} \in \mathbb{Z}\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}
+	\end{align*}
+	\index{upsampling}
+\end{definition}
+
+\begin{theorem}
+	\begin{align*}
+		\upsample{M_1} \upsample{M_2} f &= \upsample{M_1 M_2} f
+	\end{align*}
+	\index{upsampling}
+\end{theorem}
+
+\begin{theorem}
+	\begin{align*}
+		\upsample{M} (\alpha f + \beta g) &= \alpha \upsample{M} f + \beta \upsample{M} g
+	\end{align*}
+	\index{upsampling}
+\end{theorem}
+
+\begin{theorem}
+	Let $D_p$ be a translation operator, i.e.
+	\begin{align*}
+		D_p f[n] &= f[n - p]
+	\end{align*}
+	Then,
+	\begin{align*}
+		\upsample{M} D_p f &= D_{M p} \upsample{M} f
+	\end{align*}
+	\index{upsampling}
+\end{theorem}
+
+\begin{theorem}
+	Let $H$ be an LTI filter.
+	Then,
+	\begin{align*}
+		\upsample{M} H &= G \upsample{M}
+	\end{align*}
+	where
+	\begin{align*}
+		G &= \sum\limits_{m = -\infty}^{\infty} h[m] D_{M m}
+	\end{align*}
+	with impulse response
+	\begin{align*}
+		g[m] &=
+			\begin{cases}
+				h\left[ \frac{m}{M} \right] &;\quad \frac{m}{M} \in \mathbb{Z}\\
+				0 &;\quad \text{otherwise}\\
+			\end{cases}
+	\end{align*}
+	where $h[n]$ is the impulse response of $H$.
+	Also,
+	\begin{align*}
+		G(f) &= H(M f)
+	\end{align*}
+\end{theorem}
+
+\begin{theorem}[Noble Identity for Upsampling]
+	\begin{align*}
+		\upsample{M} (h \ast f) &= \left( \upsample{M} h \right) \ast \left( \upsample{M} f \right)
+	\end{align*}
+	Equivalently, applying $H(f)$ and then upsampling by $M$ is equivalent to upsampling by $M$ and then applying $H(M f)$.
+	\index{Noble Identity!upsampling}
+	\label{thm:Noble_identity_for_upsampling}
+\end{theorem}
+
+\section{Polyphase Representation}
+
+\begin{theorem}[Type 1 Polyphase Decomposition]
+	\begin{align*}
+		\sum\limits_{n = -\infty}^{\infty} f[n] &= \sum\limits_{m = 0}^{M - 1} \sum\limits_{n = -\infty}^{\infty} f[M n + m]
+	\end{align*}
+	Therefore, for a linear shift invariant system
+	\begin{align*}
+		H &= \sum\limits_{n = -\infty}^{\infty} h[n] D_n
+	\end{align*}
+	the polyphase component of $h[n]$ with respect to $M$ can be defined as
+	\begin{align*}
+		e_m[n] &= h[M n + m]
+	\end{align*}
+	Hence,
+	\begin{align*}
+		(h \ast f)[n] &= \sum\limits_{m = 0}^{M - 1} (\upsample{M} e_m) \ast f[n - m]
+	\end{align*}
+	and equivalently,
+	\begin{align*}
+		H(f) &= \sum\limits_{m = 0}^{M - 1} E_m(M f) e^{-2 \pi j f n}
+	\end{align*}
+	where
+	\begin{align*}
+		E_m &= \FT\left\{ e_m \right\}
+	\end{align*}
+	\index{polyphase decomposition!type 1}
+	\label{thm:type_1_polyphase_decomposition}
+\end{theorem}
+
+\begin{proof}
+	Let $\varepsilon_m$ be a system with impulse response $e_m[n]$.
+	Therefore,
+	\begin{align*}
+		\varepsilon_m &= \sum\limits_{n = -\infty}^{\infty} e_m[n] D_n\\
+		&= \sum\limits_{n = -\infty}^{\infty} h[M n + m]
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		H &= \sum\limits_{m = -}^{M - 1} \sum\limits_{n = -\infty}^{\infty} h[M n + m] D_{M n + m}\\
+		&= \sum\limits_{m = 0}^{M - 1} \left( \sum\limits_{n = -\infty}^{\infty} h[M n + m] D_{M n} \right) D_m\\
+		&= \sum\limits_{m = 0}^{M - 1} \left( \sum\limits_{n = -\infty}^{\infty} e_m[n] D_{M n} \right) D_m
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		(h \ast f)[n] &= \sum\limits_{m = 0}^{M - 1} (\upsample{M} e_m) \ast f[n - m]
+	\end{align*}
+	and equivalently,
+	\begin{align*}
+		H(f) &= \sum\limits_{m = 0}^{M - 1} E_m(M f) e^{-2 \pi j f m}
+	\end{align*}
+	where
+	\begin{align*}
+		E_m &= \FT\left\{ e_m \right\}
+	\end{align*}
+\end{proof}
+
+\begin{theorem}[Type 2 Polyphase Decomposition]
+	\begin{align*}
+		\sum\limits_{n = -\infty}^{\infty} f[n] &= \sum\limits_{m = 0}^{M - 1} \sum\limits_{n = -\infty}^{\infty} f[M n + m]
+	\end{align*}
+	Therefore, for a linear shift invariant system
+	\begin{align*}
+		H &= \sum\limits_{n = -\infty}^{\infty} h[n] D_n
+	\end{align*}
+	the polyphase component of $h[n]$ with respect to $M$ can be defined as
+	\begin{align*}
+		r_m[n] &= h[M n - m]
+	\end{align*}
+	Hence,
+	\begin{align*}
+		(h \ast f)[n] &= \sum\limits_{m = 0}^{M - 1} \left( \left( \upsample{M} r_m \right) \ast f \right) [n + m]
+	\end{align*}
+	and equivalently,
+	\begin{align*}
+		H(f) &= \sum\limits_{m = 0}^{M - 1} R_m(M f) e^{-j 2 \pi f (M - 1 - m)}
+	\end{align*}
+	where
+	\begin{align*}
+		R_m &= \FT\left\{ r_m \right\}
+	\end{align*}
+	\index{polyphase decomposition!type 2}
+	\label{thm:type_2_polyphase_decomposition}
+\end{theorem}
+
+\begin{proof}
+	Let $\varepsilon_m$ be a system with impulse response $e_m[n]$.
+	Therefore,
+	\begin{align*}
+		\varepsilon_m &= \sum\limits_{n = -\infty}^{\infty} e_m[n] D_n\\
+		&= \sum\limits_{n = -\infty}^{\infty} h[M n + m]
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		H &= \sum\limits_{m = -}^{M - 1} \sum\limits_{n = -\infty}^{\infty} h[M n + m] D_{M n + m}\\
+		&= \sum\limits_{m = 0}^{M - 1} \left( \sum\limits_{n = -\infty}^{\infty} h[M n + m] D_{M n} \right) D_m\\
+		&= \sum\limits_{m = 0}^{M - 1} \left( \sum\limits_{n = -\infty}^{\infty} e_m[n] D_{M n} \right) D_m
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		(h \ast f)[n] &= \sum\limits_{m = 0}^{M - 1} (\upsample{M} e_m) \ast f[n - m]
+	\end{align*}
+	and equivalently,
+	\begin{align*}
+		H(f) &= \sum\limits_{m = 0}^{M - 1} E_m(M f) e^{-2 \pi j f m}
+	\end{align*}
+	where
+	\begin{align*}
+		E_m &= \FT\left\{ e_m \right\}
+	\end{align*}
+	Let
+	\begin{align*}
+		r_m[n] &= e_{-m}[n]\\
+		&= h[M n - m]
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		H &= \sum\limits_{m = 0}^{M - 1} D_{-m} \left( \sum\limits_{n = -\infty}^{\infty} r_m[n] D_{M n} \right)\\
+		&= \sum\limits_{m = 0}^{M - 1} D_{-m} \left( \sum\limits_{n = -\infty}^{\infty} \left( \upsample{M} r_m \right)[n] D_n \right)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		(h \ast f)[n] &= \sum\limits_{m = 0}^{M - 1} \left( \left( \upsample{M} r_m \right) \ast f \right)[n + m]
+	\end{align*}
+\end{proof}
+
+\section{Efficient Implementation of Decimators}
+
+\begin{theorem}
+	Let $H$ be a linear shift invariant system with impulse response $h[n]$, and polyphase component
+	\begin{align*}
+		e_m[n] &= h[M n - m]
+	\end{align*}
+	Then,
+	\begin{align*}
+		\downsample{M} H &= \sum\limits_{m = 0}^{M - 1} \varepsilon_m \downsample{M} D_m
+	\end{align*}
+	where $\varepsilon_m$ is the system with impulse response $e_m[n]$.\\
+	Therefore, for a signal $x \in \mathbb{R}^{N^d}$ and a filter $h \in \mathbb{R}^{k^d}$, the cost of applying the LHS is $\O\left( N^d k^d \right)$, while the cost of applying the RHS is $\O\left( \frac{N^d k^d}{M^d} \right)$, i.e. the RHS is more efficient by a factor of $M^d$.
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		\downsample{M} H f &= \sum\limits_{m = 0}^{M - 1} \upsample{M} \varepsilon_m \ast D_m f\\
+	\end{align*}
+	Therefore, by \cref{thm:Noble_identity_for_downsampling},
+	\begin{align*}
+		\downsample{M} H f &= \sum\limits_{m = 0}^{M - 1} e_m \ast \downsample{M} D_m f\\
+		&= \sum\limits_{m = 0}^{M - 1} \varepsilon_m \downsample{M} D_m f
+	\end{align*}
+	Hence,
+	\begin{align*}
+		\downsample{M} H &= \sum\limits_{m = 0}^{M - 1} \varepsilon_m \downsample{M} D_m
+	\end{align*}
+\end{proof}
+
+\section{Efficient Implementation of Interpolation}
+
+\begin{theorem}
+	Let $H$ be a linear shift invariant system with impulse response $h[n]$, and polyphase component
+	\begin{align*}
+		e_m[n] &= h[M n - m]
+	\end{align*}
+	Then,
+	\begin{align*}
+		H \upsample{M} &= \sum\limits_{m = 0}^{M - 1} D_{-m} \upsample{M} \mathcal{R}_m
+	\end{align*}
+	where $\mathcal{R}_m$ is the system with impulse response $r_m[n]$.\\
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		H \upsample{M} f &= \sum\limits_{m = 0}^{M - 1} D_{-m} \left( \upsample{M} r_m \ast \upsample{M} f \right)
+	\end{align*}
+	Therefore, by \cref{thm:Noble_identity_for_upsampling},
+	\begin{align*}
+		H \upsample{M} f &= \sum\limits_{m = 0}^{M - 1} D_{-m} \upsample{M} r_m \ast f\\
+		&= \sum\limits_{m = 0}^{M - 1} D_{-m} \upsample{M} \mathcal{R}_m f
+	\end{align*}
+	Hence,
+	\begin{align*}
+		H \upsample{M} &= \sum\limits_{m = 0}^{M - 1} D_{-m} \upsample{M} \mathcal{R}_m
+	\end{align*}
+\end{proof}
+
+\clearpage
+\part{Short Time Fourier Transform}
+
+\section{Short Time Fourier Transform}
+
+\begin{definition}[Short time Fourier transform]
+	The short time Fourier transform of a signal $f(t)$ is defined to be
+	\begin{align*}
+		\hat{x}(f,\tau) &= \int\limits_{-\infty}^{\infty} x(t) w(t - \tau) e^{-j 2 \pi f t} \dif t
+	\end{align*}
+	where $w(t)$ is the window function.\\
+	Equivalently,
+	\begin{align*}
+		x(t) w(t - \tau) &= \int\limits_{-\infty}^{\infty} \hat{x}(f,\tau) e^{j 2 \pi f t} \dif f
+	\end{align*}
+	This allows for localization in the time domain which is not possible when using Fourier transform.
+	\index{transform!Fourier!short time}
+\end{definition}
+
+\begin{definition}[Gabor transform]
+	The short time Fourier transform with window function
+	\begin{align*}
+		w(t) &= e^{-\frac{t^2}{\sigma^2}}
+	\end{align*}
+	is called the Gabor transform.
+	\index{transform!Gabor}
+\end{definition}
+
+\clearpage
 \printindex
 
 \end{document}
