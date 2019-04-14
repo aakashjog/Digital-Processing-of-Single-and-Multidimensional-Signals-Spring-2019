@@ -100,7 +100,9 @@ pinstyle/.style = {pin edge={to-,thin,black}}
 \DeclareMathOperator{\FT}{\mathcal{FT}}
 \DeclareMathOperator{\DTFT}{\mathcal{DTFT}}
 \DeclareMathOperator{\IFT}{\mathcal{FT}^{-1}}
+\DeclareMathOperator{\IDTFT}{\mathcal{DTFT}^{-1}}
 \DeclareMathOperator{\DFT}{\mathcal{DFT}}
+\DeclareMathOperator{\FFT}{\mathcal{FFT}}
 
 \DeclareMathOperator{\Q}{\mathcal{Q}}
 
@@ -1971,6 +1973,235 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	is called the Gabor transform.
 	\index{transform!Gabor}
 \end{definition}
+
+\section{Inverse Short Time Fourier Transform}
+
+\begin{theorem}
+	\begin{align*}
+		x(t) &= \IFT\left\{ \int\limits_{-\infty}^{\infty} x(f,\tau) \dif \tau \right\}
+	\end{align*}
+	\index{transform!Fourier!short time}
+\end{theorem}
+
+\begin{proof}
+	Let $w(t)$ be a window function such that
+	\begin{align*}
+		\int\limits_{-\infty}^{\infty} w(t) \dif t &= 1
+	\end{align*}
+	Therefore, for any $\tau \in \mathbb{R}$,
+	\begin{align*}
+		\int\limits_{-\infty}^{\infty} w(t - \tau) \dif t &= 1\\
+		\int\limits_{-\infty}^{\infty} w(t - \tau) \dif \tau &= 1
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\int\limits_{-\infty}^{\infty} \hat{x}(f,\tau) \dif \tau &= \int\limits_{-\infty}^{\infty} \int\limits_{-\infty}^{\infty} x(t) w(t - \tau) e^{-j 2 \pi f t} \dif t \dif \tau\\
+		&= \int\limits_{-\infty}^{\infty} x(t) e^{-j 2 \pi f t} \left( \int\limits_{-\infty}^{\infty} w(t - \tau) \dif \tau \right) \dif t\\
+		&= \int\limits_{-\infty}^{\infty} x(t) e^{-j 2 \pi f t} (1) \dif t\\
+		&= X(f)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		x(t) &= \IFT\left\{ \int\limits_{-\infty}^{\infty} x(f,\tau) \dif \tau \right\}
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	\begin{align*}
+		\IFT\left\{ x(t,\tau) \right\} &= x(t) w(t - \tau)
+	\end{align*}
+	\index{transform!Fourier!short time}
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		x(t) &= \int\limits_{-\infty}^{\infty} \int\limits_{-\infty}^{\infty} x(f,\tau) e^{2 \pi f t} \dif \tau \dif f\\
+		&= \int\limits_{-\infty}^{\infty} \left( \int\limits_{-\infty}^{\infty} x(f,\tau) e^{j 2 \pi f t} \dif f \right) \dif \tau
+	\end{align*}
+	Also,
+	\begin{align*}
+		x(t) &= \int\limits_{-\infty}^{\infty} x(t) w(t - \tau) \dif \tau
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\IFT\left\{ x(t,\tau) \right\} &= x(t) w(t - \tau)
+	\end{align*}
+\end{proof}
+
+\section{Discrete Short Time Fourier Transform}
+
+\begin{theorem}
+	Assume constant overlap-add (COLA) for hop size $R$, i.e.
+	\begin{align*}
+		\sum\limits_{m = -\infty}^{\infty} w(n - m R) &= 1
+	\end{align*}
+	Then,
+	\begin{align*}
+		x(n) &= \IDTFT\left\{ \sum\limits_{m = -\infty}^{\infty} X_m(f) \right\}
+	\end{align*}
+	where
+	\begin{align*}
+		X_m(f) &= \DTFT\left\{ x(t) D_{m R}\left( w(t) \right) \right\}
+	\end{align*}
+\end{theorem}
+
+\begin{proof}
+	For simplicity, assume that the sampling is performed with $T = 1$.
+	Hence, let
+	\begin{align*}
+		X_m(f) &= \DTFT\left\{ x(t) D_{m R}\left( w(t) \right) \right\}\\
+		&= \sum\limits_{n = -\infty}^{\infty} x(n) w(n - m R) e^{-j 2 \pi f n}
+	\end{align*}
+	where
+	\begin{align*}
+		D_{m R}(w) &= w(n - m R)
+	\end{align*}
+	and $R$ is called the hop size.\\
+	Assume constant overlap-add (COLA) for hop size $R$, i.e.
+	\begin{align*}
+		\sum\limits_{m = -\infty}^{\infty} w(n - m R) &= 1
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\sum\limits_{m = -\infty}^{\infty} X_m(f) &= \sum\limits_{m = -\infty}^{\infty} \sum\limits_{n = -\infty}^{\infty} x(n) w(n - m R) e^{-j 2 \pi f n}\\
+		&= \sum\limits_{n = -\infty}^{\infty} x(n) e^{-j 2 \pi f n} \sum\limits_{m = -\infty}^{\infty} w(n - m R)\\
+		&= \sum\limits_{n = -\infty}^{\infty} x(n) e^{-j 2 \pi f n} (1)\\
+		&= \DTFT\left\{ x(n) \right\}
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		x(n) &= \IDTFT\left\{ \sum\limits_{m = -\infty}^{\infty} X_m(f) \right\}
+	\end{align*}
+\end{proof}
+
+\subsection{Discrete STFT using Fast Fourier Transform}
+
+\begin{definition}[Discrete short time Fourier transform using FFT]
+	Let
+	\begin{align*}
+		\tilde{x_m(n)} &= x(n + m R)
+	\end{align*}
+	for $n \in \mathbb{Z}$, and $-M \le n \le M$, where $M$ is called the frame length.
+	Then,
+	\begin{align*}
+		X_m(f) &= \FT\left\{ x_m(t) \right\}\\
+		&= e^{-j 2 \pi f m R} \DTFT\left\{ D_{-m R}\left( x(t) \right) w(t) \right\}\\
+		&= e^{-j 2 \pi f m R} \DTFT\left\{ \tilde{x_m}(n) w(n) \right\}
+	\end{align*}
+	Hence, let
+	\begin{align*}
+		\tilde{x_m}^{w}(n) &=
+			\begin{cases}
+				\tilde{x_m}(n) w(n) &;\quad |n| \le M\\
+				0 &;\quad M < n \le \frac{N}{2} - 1\\
+				0 &;\quad -\frac{N}{2} \le n < -M\\
+			\end{cases}
+	\end{align*}
+	Then,
+	\begin{align*}
+		\FFT_{k}\left\{ \tilde{x_m}^{w}(n) \right\} &= e^{-j 2 \pi \frac{k}{N} m R} \FFT\left\{ \tilde{x_m}^w(n) \right\}
+	\end{align*}
+	is called the time normalized STFT, where $k$ is called the bin number, and $m$ is called the frame number, $N$ is the size of the FFT, and $M_w = 2 M + 1$ is the size of the filter $w(n)$.
+	\index{transform!Fourier!discrete short time!using FFT}
+\end{definition}
+
+\subsection{Discrete STFT using Filter Bank Summation Interpolation}
+
+\begin{definition}[Discrete short time Fourier transform using filter banks]
+	\begin{align*}
+		x_m(k) &= \sum\limits_{n = -\infty}^{\infty} x(n) e^{-j 2 \pi \frac{k}{N} n} w(n - m R)
+	\end{align*}
+	Hence, let
+	\begin{align*}
+		x_k(n) &= x(n) e^{-j 2 \pi \frac{k}{N} n}
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		x_m(k) &= x_k(m R) \ast w(-m R)
+	\end{align*}
+	Hence, $x_m(k)$ can be obtained by passing $x(n)$ through a filter bank as in \cref{fig:discrete_STFT_implementation_using_filter_banks}.
+	\begin{figure}[H]
+		\centering
+		\begin{adjustbox}{max width=\columnwidth}
+		\begin{tikzpicture}[auto, node distance=2cm,]
+			\node [mixer] (mixer1) at (0,2) {};
+			\node [mixer] (mixern) at (0,-2) {};
+			\node at (0,0) {$\vdots$};
+
+			\node [block, right = of mixer1] (filter1) {$w[-n]$};
+			\node [block, right = of mixern] (filtern) {$w[-n]$};
+
+			\node [block, right = of filter1] (downsampler1) {$\downsample{R}$};
+			\node [block, right = of filtern] (downsamplern) {$\downsample{R}$};
+
+			\draw [-stealth] (-2,0) node [left] {$x[n]$} -| (-1,2) -- (mixer1.west);
+			\draw [-stealth] (-2,0) node [left] {$x[n]$} -| (-1,-2) -- (mixern.west);
+
+			\draw [-stealth] (mixer1.east) -- (filter1.west);
+			\draw [-stealth] (mixern.east) -- (filtern.west);
+
+			\draw [-stealth] (filter1.east) -- (downsampler1.west);
+			\draw [-stealth] (filtern.east) -- (downsamplern.west);
+
+			\draw [-stealth] (downsampler1.east) -- ++(1,0) node [right] {$x_m(0)$};
+			\draw [-stealth] (downsamplern.east) -- ++(1,0) node [right] {$x_m(n - 1)$};
+
+			\draw [stealth-] (mixer1.north) -- ++(0,1) node [above] {$e^{-j 2 \pi \frac{0}{N} n}$};
+			\draw [stealth-] (mixern.south) -- ++(0,-1) node [below] {$e^{-j 2 \pi \frac{N - 1}{N} n}$};
+		\end{tikzpicture}
+		\end{adjustbox}
+		\caption{Discrete STFT Implementation using Filter Banks}
+		\label{fig:discrete_STFT_implementation_using_filter_banks}
+	\end{figure}
+	\index{transform!Fourier!discrete short time!using filter banks}
+\end{definition}
+
+\clearpage
+\part{Wavelets}
+
+\begin{definition}[Orthogonal wavelets]
+	Let $\psi: \mathbb{R} \to \mathbb{C}$, and
+	\begin{align*}
+		\psi_{n,k}(t) &= 2^{\frac{n}{2}} \psi\left( 2^n t - k \right)
+	\end{align*}
+	where $n, k \in \mathbb{Z}$.
+	Such a family of $\psi_{n,k}$, which is orthonormal, and
+	\begin{align*}
+		L_2 &= {\vspan{\left\{ \psi_{n,k} \right\}}}^{C}
+	\end{align*}
+	is called a family of orthonormal wavelets, and $\psi$ called the mother wavelet.
+	\index{wavelet!orthogonal}
+	\index{wavelet!mother}
+\end{definition}
+%
+\section{The Haar Wavelet}
+
+\begin{definition}
+	The family of wavelets defined by the mother wavelet
+	\begin{align*}
+		\psi(t) &= u_{\left[ 0, \frac{1}{2} \right]}(t) - u_{\left[ \frac{1}{2},1 \right]}(t)
+	\end{align*}
+	and
+	\begin{align*}
+		\psi_{n,k}(t) &= 2^{\frac{n}{2}} \psi\left( 2^n t - k \right)\\
+		&= 2^{\frac{n}{2}} \left( u_{\left[ \frac{k}{2^n} , \frac{k + \frac{1}{2}}{2^n} \right]} - u_{\left[ \frac{k + \frac{1}{2}}{2^n} , \frac{k + 1}{2^n} \right]} \right)
+	\end{align*}
+	is called the family of Haar wavelets.
+	\index{wavelet!Haar}
+\end{definition}
+
+\begin{theorem}
+	The set of Haar wavelets $\left\{ \psi_{i,k} \right\}$ is orthonormal.
+	\index{wavelet!Haar}
+\end{theorem}
+
+\begin{theorem}
+	For Haar wavelets,
+	\begin{align*}
+		u_{[0,1]}(t) &= \sum\limits_{i < 0} 2^{\frac{i}{2}} \psi_{i,0}(t)
+	\end{align*}
+	\index{wavelet!Haar}
+\end{theorem}
 
 \clearpage
 \printindex
