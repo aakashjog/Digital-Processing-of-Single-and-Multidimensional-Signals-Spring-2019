@@ -2173,7 +2173,7 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\index{wavelet!orthogonal}
 	\index{wavelet!mother}
 \end{definition}
-%
+
 \section{The Haar Wavelet}
 
 \begin{definition}
@@ -2202,6 +2202,604 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\end{align*}
 	\index{wavelet!Haar}
 \end{theorem}
+
+\begin{theorem}
+	Let $U$ be a subspace of $V$.
+	Then,
+	\begin{align*}
+		P_V P_U &= P_U
+	\end{align*}
+	and
+	\begin{align*}
+		P_U P_V &= P_V
+	\end{align*}
+	where $P_U$ and $P_V$ are orthogonal projections onto $U$ and $V$ respectively.
+\end{theorem}
+
+\begin{proof}
+	Let $x \in H$, where $H$ is an Hilbert space.\\
+	Hence, let
+	\begin{align*}
+		P_U x &= x_U
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		P_V P_U x &= P_V x_U
+	\end{align*}
+	Also, $U \subset V$.
+	Hence,
+	\begin{align*}
+		P_V x_U &= x_u
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		P_V P_U x &= P_U x
+	\end{align*}
+	~\\
+	$P_U$ and $P_V$ are orthogonal projections.
+	Hence,
+	\begin{align*}
+		{P_U}^* &= P_U\\
+		{P_V}^* &= P_V
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		P_U &= {P_U}^*\\
+		&= (P_V P_U)^*\\
+		&= {P_U}^* {P_V}^*\\
+		&= P_U P_V
+	\end{align*}
+\end{proof}
+
+\section{Multiresolution Analysis}
+
+\begin{definition}
+	Let $\{V_j\}$ be a sequence of subspaces of $L_2(\mathbb{R})$.
+	It is said to be a multiresolution analysis (MRA) if
+	\begin{enumerate}
+		\item
+			\begin{align*}
+				V_j &\subset V_{j + 1}
+			\end{align*}
+			for all $j \in \mathbb{Z}$.
+		\item
+			\begin{align*}
+				\bigcup_{j \in \mathbb{Z}} V_j &= L_2(\mathbb{R})
+			\end{align*}
+		\item
+			\begin{align*}
+				\bigcap_{j \in \mathbb{Z}} V_j &= \{0\}
+			\end{align*}
+		\item
+			\begin{align*}
+				f(t) &\in V_i
+			\end{align*}
+			if and only if
+			\begin{align*}
+				f\left( 2^{-i} t \right) &\in V_0
+			\end{align*}
+		\item
+			\begin{align*}
+				f(t) &\in V_0
+			\end{align*}
+			if and only if
+			\begin{align*}
+				f(t - k) &\in V_0
+			\end{align*}
+			for all $k \in \mathbb{Z}$.
+		\item
+			$\exists \varphi \in V_0$ such that $\left\{ \varphi(t - k) \right\}_{k \in \mathbb{Z}}$ is an orthonormal basis of $V_0$.
+			Such a $\varphi(t)$ is said to be the scaling function of the MRA.
+	\end{enumerate}
+	\index{multiresolution analysis}
+	\index{scaling function}
+\end{definition}
+
+\section{Scaling Function}
+
+\begin{theorem}[Scaling equations]
+	For a scaling function $\varphi(t)$,
+	\begin{align*}
+		\varphi(t) &= \sum\limits_{k = -\infty}^{\infty} a_k \varphi(2 t - k)
+	\end{align*}
+	Equivalently,
+	\begin{align*}
+		\varphi\left( \frac{t}{2} \right) &= \sum\limits_{k = -\infty}^{\infty} \varphi(t - k)
+	\end{align*}
+	Hence, taking the Fourier transform,
+	\begin{align*}
+		\hat{\varphi}(2 f) &= m_{\varphi}(f) \hat{\varphi}(f)
+	\end{align*}
+	and equivalently,
+	\begin{align*}
+		\hat{\varphi}(f) &= m_{\varphi}\left( \frac{f}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	where
+	\begin{align*}
+		m_{\varphi}(f) &= \frac{1}{2} \sum\limits_{k = -\infty}^{\infty} a_k e^{-j 2 \pi f k}
+	\end{align*}
+	is the DTFT of the sequence $a_k$, multiplied by $\frac{1}{2}$.
+	\label{thm:scaling_equations}
+	\index{scaling equations}
+	\index{scaling function}
+\end{theorem}
+
+\begin{theorem}
+	Let $\left\{ \varphi(t - n) \right\}$ be orthonormal in $L_2$.
+	Then,
+	\begin{align*}
+		\left| m_{\varphi}(f) \right|^2 + \left| m_{\varphi}\left( f + \frac{1}{2} \right) \right|^2 &= 1
+	\end{align*}
+	\index{scaling function}
+\end{theorem}
+
+\begin{proof}
+	As $\varphi(t - n)$ are orthonormal,
+	\begin{align*}
+		1 &= \sum\limits_{k = -\infty}^{\infty} \left| \hat{\varphi}(f + k) \right|^2\\
+		&= \sum\limits_{k = -\infty}^{\infty} \left| \hat{\varphi}\left( \frac{f}{2} + \frac{k}{2} \right) \right|^2 \left| m_{\varphi}\left( \frac{f}{2} + \frac{k}{2} \right) \right|^2\\
+		&= \quad\sum\limits_{k = -\infty}^{\infty} \left| \hat{\varphi}\left( \frac{f}{2} + k \right) \right|^2 \left| m_{\varphi}\left( \frac{f}{2} + k \right) \right|^2\\
+		&\quad + \sum\limits_{k = -\infty}^{\infty} \left| \hat{\varphi}\left( \frac{f}{2} + k + \frac{1}{2} \right) \right|^2 \left| m_{\varphi}\left( \frac{f}{2} + k + \frac{1}{2} \right) \right|^2
+	\end{align*}
+	Hence, as $m_{\varphi}(f + k) = m_{\varphi}(f)$,
+	\begin{align*}
+		1 &= \left| m_{\varphi}\left( \frac{f}{2} \right) \right|^2 \sum\limits_{k = -\infty}^{\infty} \left| \hat{\varphi}\left( \frac{f}{2} + k \right) \right| + \left| m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right) \right|^2 \sum\limits_{k = -\infty}^{\infty} \left| \hat{\varphi}\left( \frac{f}{2} + \frac{1}{2} + k \right) \right|^2
+	\end{align*}
+	Hence, as $\varphi(t - n)$ are orthonormal,
+	\begin{align*}
+		1 &= \left| m_{\varphi}\left( \frac{f}{2} \right) \right|^2 + \left| m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right) \right|^2
+	\end{align*}
+	Hence, replacing $\frac{f}{2}$ by $f$,
+	\begin{align*}
+		1 &= \left| m_{\varphi}(f) \right|^2 + \left| m_{\varphi}\left( f + \frac{1}{2} \right) \right|^2
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	Let $\varphi$ be an orthonormal basis.
+	Given the scaling equations with $m_{\varphi}$ and given that $\hat{\varphi}(f)$ is continuous at $f = 0$ and
+	\begin{align*}
+		\hat{\varphi}(0) &\neq 0
+	\end{align*}
+	then
+	\begin{align*}
+		V_0 &= {\vspan\left\{ \varphi(t - n) \right\}}^{C}
+	\end{align*}
+	and
+	\begin{align*}
+		V_j &= {\left\{ g\left( 2^j t \right) \Big| g \in V_0 \right\}}^{C}\\
+		&= \vspan\left\{ \varphi\left( 2^j t - k \right) \right\}^{C}
+	\end{align*}
+	is a MRA.
+	\index{multiresolution analysis}
+\end{theorem}
+
+\begin{theorem}[Poisson summation formula]
+	Let $\varphi(t) \in L_2$, and let
+	\begin{align*}
+		f(t) &= \lim\limits_{N \to \infty} \sum\limits_{k = -N}^{N} \varphi(t - k)
+	\end{align*}
+	Then,
+	\begin{align*}
+		\int\limits_{0}^{1} f(t) e^{-j 2 \pi n t} &= \int\limits_{-\infty}^{\infty} \varphi(t) e^{-j 2 \pi n t} \dif t\\
+		&= \hat{\varphi}(n)
+	\end{align*}
+	\label{thm:Poisson_summation_formula}
+\end{theorem}
+
+\begin{theorem}
+	Let $\{V_j\}$ be a MRA with scaling function $\varphi(t)$.
+	Assume $\hat{\varphi}(f)$ is continuous at $f = 0$.
+	Then,
+	\begin{enumerate}
+		\item
+			\begin{align*}
+				\left| \hat{\varphi}(0) \right| &= 1
+			\end{align*}
+		\item
+			\begin{align*}
+				\hat{\varphi}(k) &= 0
+			\end{align*}
+			for all $k \in \mathbb{Z} \setminus \{0\}$.
+		\item
+			\begin{align*}
+				\sum\limits_{k = -\infty}^{\infty} \varphi(t + k) &= \alpha
+			\end{align*}
+			where $|\alpha| = 1$.
+	\end{enumerate}
+	\index{multiresolution analysis}
+	\index{scaling function}
+\end{theorem}
+
+\section{Wavelets and Projections}
+
+\begin{theorem}
+	Let $U$ be a subspace of $V$.
+	Then,
+	\begin{align*}
+		P_V P_U &= P_U
+	\end{align*}
+	and
+	\begin{align*}
+		P_U P_V &= P_V
+	\end{align*}
+	where $P_U$ and $P_V$ are orthogonal projections onto $U$ and $V$ respectively.
+	\index{projection!orthogonal}
+\end{theorem}
+
+\begin{proof}
+	Let $x \in H$, where $H$ is an Hilbert space.\\
+	Hence, let
+	\begin{align*}
+		P_U x &= x_U
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		P_V P_U x &= P_V x_U
+	\end{align*}
+	Also, $U \subset V$.
+	Hence,
+	\begin{align*}
+		P_V x_U &= x_u
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		P_V P_U x &= P_U x
+	\end{align*}
+	~\\
+	$P_U$ and $P_V$ are orthogonal projections.
+	Hence,
+	\begin{align*}
+		{P_U}^* &= P_U\\
+		{P_V}^* &= P_V
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		P_U &= {P_U}^*\\
+		&= (P_V P_U)^*\\
+		&= {P_U}^* {P_V}^*\\
+		&= P_U P_V
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	Let $U \subset V$,
+	Then, the orthogonal projection onto $V \setminus U$ is $P_V - P_U$.
+	\index{projection!orthogonal}
+\end{theorem}
+
+\begin{proof}
+	If $x \in V \setminus U$, then $x \in V$ and $x \in U^{\perp}$.
+	Therefore,
+	\begin{align*}
+		(P_V - P_U) x &= P_V x - P_U x\\
+		&= x - 0\\
+		&= x
+	\end{align*}
+	~\\
+	If $x \notin V \setminus U$, then $x \in V^{\perp} \cup U$.
+	Therefore,
+	\begin{align*}
+		(P_V - P_U) x &= P_V x - P_U x
+	\end{align*}
+	Also, as $U \subset V$, $V^{\perp} \subset U^{\perp}$.
+	Hence, if $x \in V^{\perp}$, then $x \in U^{\perp}$.
+	Therefore,
+	\begin{align*}
+		(P_V - P_U) x &= P_V x - P_U x\\
+		&= 0 - 0\\
+		&= 0
+	\end{align*}
+	Similarly, if $x \in U$, then $x \in V$.
+	Therefore,
+	\begin{align*}
+		(P_V - P_U) x &= P_V x - P_U x\\
+		&= x - x\\
+		&= 0
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	\begin{align*}
+		W_n &\perp W_k
+	\end{align*}
+	for $n \neq k$.
+	\index{wavelets}
+\end{theorem}
+
+\begin{proof}
+	Any function in $W_n$ is of the form $(P_{n + 1} - P_n) f$.
+	Therefore, for all $n \neq k$,
+	\begin{align*}
+		\left\langle (P_{n + 1} - P_n) f , (P_{k + 1} - P_k) f \right\rangle &= \left\langle f , (P_{n + 1} - P_n)^* (P_{k + 1} - P_k) f \right\rangle\\
+		&= \left\langle f , (P_{n + 1} P_{k + 1} - P_n P_{k + 1} - P_{n + 1} P_k + P_n P_k) \right\rangle\\
+		&= \left\langle f , (P_{k + 1} - P_{k + 1} - P_k + P_k) \right\rangle\\
+		&= \langle f , 0 \rangle\\
+		&= 0
+	\end{align*}
+	Hence $W_n \perp W_k$.
+\end{proof}
+%
+\begin{theorem}
+	\begin{align*}
+		\bigoplus W_n &= L_2
+	\end{align*}
+	that is, for any $f \in L_2$, $\exists f_i \in W_i$ such that
+	\begin{align*}
+		f &= \sum\limits_{i = -\infty}^{\infty} f_i
+	\end{align*}
+	and the set of $f_i$s is unique.
+	\index{wavelets}
+\end{theorem}
+
+\begin{proof}
+	For
+	\begin{align*}
+		f &= \sum\limits_{i = -\infty}^{\infty} f_i
+	\end{align*}
+	to hold,
+	\begin{align*}
+		\lim\limits_{m, n \to \infty} \left\| f - \sum\limits_{i = m}^{n - 1} f_i \right\| &= 0
+	\end{align*}
+	Also,
+	\begin{align*}
+		f &= (f - P_n f) + P_n f - P_m f + (P_m f)
+	\end{align*}
+	Hence, as $\bigcup_{i \in \mathbb{Z}} V_i = L_2$,
+	\begin{align*}
+		\lim\limits_{n \to \infty} \left\| f - P_n f \right\| &= 0
+	\end{align*}
+	Similarly, as $\bigcap_{m \to \infty} V_i = \{0\}$,
+	\begin{align*}
+		\lim\limits_{m \to \infty} \|P_m f\| &= 0
+	\end{align*}
+	Also,
+	\begin{align*}
+		P_n f - P_m f &= \sum\limits_{i = m}^{n - 1} (P_{i + 1} - P_i) f
+	\end{align*}
+	Hence, let
+	\begin{align*}
+		f_i &= (P_{i + 1} - P_i) f
+	\end{align*}
+	Therefore, $f_i \in W_i$.
+	Therefore,
+	\begin{align*}
+		f - (P_n f - P_m f) &= (f - P_n f) + (P_m f)
+	\end{align*}
+	Therefore, using the Triangle Inequality, for $m,n \to \infty$,
+	\begin{align*}
+		\lim\limits_{m, n \to \infty} \left\| f - \sum\limits_{i = m}^{n - 1} f_i \right\| &= 0
+	\end{align*}
+	~\\
+	If possible, let
+	\begin{align*}
+		f &= \sum\limits_{i = -\infty}^{\infty} f_i\\
+		&= \sum\limits_{i = -\infty}^{\infty} g_i
+	\end{align*}
+	Then,
+	\begin{align*}
+		g_k &= (P_{k + 1} - P_k) \sum\limits_{i = -\infty}^{\infty} g_i\\
+		&= (P_{k + 1} - P_k) f\\
+		&= f_k
+	\end{align*}
+	Hence, the set $\{f_i\}$ is unique.
+\end{proof}
+
+\begin{theorem}
+	Let $\psi \in W_0$ and let $\left\{ \psi(t - k) \right\}$ be an orthonormal basis for $W_0$.
+	Then, $\left\{ 2^{\frac{i}{2}} \psi\left( 2^i t - k \right) \right\}$ for $k \in \mathbb{Z}$ is an orthonormal basis for $W_i$.
+	\index{wavelets}
+\end{theorem}
+
+\begin{theorem}
+	$\left\{ 2^{\frac{i}{2}} \psi\left( 2^i t - k \right) \right\}$ is an orthonormal basis of $L_2$.
+\end{theorem}
+
+\begin{proof}
+	The set of all $\left\{ \psi_{i,k}(t) \right\}$ spans $W_i$.
+	Also,
+	\begin{align*}
+		L_2 &= \bigoplus_{i \in \mathbb{Z}} W_i
+	\end{align*}
+	Therefore, $\left\{ \psi_{i,k}(t) \right\}$ spans $L_2$.
+	Also, as the set is orthonormal, it is a orthonormal basis of $L_2$.
+	\index{wavelets}
+\end{proof}
+
+\section{Characteristics of Wavelets}
+
+\begin{theorem}
+	$g \in V_0$ if and only if
+	\begin{align*}
+		g(t) &= \sum\limits_{n = -\infty}^{\infty} \alpha_n \varphi(t - n)
+	\end{align*}
+	if and only if
+	\begin{align*}
+		\hat{g}(f) &= \gamma(f) \hat{\varphi}(f)
+	\end{align*}
+	where
+	\begin{align*}
+		\gamma(f) &= \sum\limits_{n = -\infty}^{\infty} \alpha_n e^{-j 2 \pi f n}
+	\end{align*}
+	is the DTFT of the sequence $\alpha_n$, and hence is $L_2[0,1]$, i.e.
+	\begin{align*}
+		\left\| g(t) \right\| &= \sqrt{\int\limits_{0}^{1} \left| \gamma(f) \right|^2 \dif f}
+	\end{align*}
+	and is periodic with a period of $1$.
+	\index{wavelets}
+\end{theorem}
+
+\begin{theorem}
+	$z \in V_1$ iff
+	\begin{align*}
+		\hat{z}(f) &= m_z\left( \frac{f}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	where
+	\begin{align*}
+		m_z\left( \frac{f}{2} \right) &= \frac{1}{\sqrt{2}} \gamma(f)
+	\end{align*}
+	Also,
+	\begin{align*}
+		\|z\|_{L_2} &= \sqrt{2} \sqrt{\int\limits_{0}^{1} \left| m_z(f) \right|^2 \dif f}
+	\end{align*}
+	\index{wavelets}
+\end{theorem}
+
+\begin{proof}
+	$z \in V_1$ if and only if $\exists g \in V_0$ such that
+	\begin{align*}
+		z(t) &= \sqrt{2} g(2 t)
+	\end{align*}
+	Also,
+	\begin{align*}
+		\|z\|_{L_2} &= \|g\|_{L_2}
+	\end{align*}
+	Equivalently,
+	\begin{align*}
+		\hat{z}(f) &= \frac{1}{\sqrt{2}} \hat{g}\left( \frac{f}{2} \right)\\
+		&= m_z\left( \frac{f}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	where
+	\begin{align*}
+		m_z(f) &= \frac{1}{\sqrt{2}} \gamma(f)
+	\end{align*}
+	is in $L_2[0,1]$ and is periodic with a period of $1$.\\
+	Also,
+	\begin{align*}
+		\|z\|_{L_2} &= \sqrt{2} \sqrt{\int\limits_{0}^{1} \left| m_z(f) \right|^2 \dif f}
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	Let $z \in L_2$.
+	Then, $z \in W_0$ if and only if
+	\begin{align*}
+		\hat{z}(f) &= e^{j \pi f} v(f) m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	where $v$ is periodic with period $1$,
+	\begin{align*}
+		\|z\|_{L_2} &= \sqrt{\int\limits_{0}^{1} \left| v(f) \right|^2 \dif f}
+	\end{align*}
+	and
+	\begin{align*}
+		m_z\left( \frac{f}{2} \right) &= e^{j \pi f} \overline{m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right)}
+	\end{align*}
+	where $m_{\varphi}(f)$ is as in \cref{thm:scaling_equations},
+	\index{wavelets}
+	\index{scaling equations}
+\end{theorem}
+
+\begin{proof}
+	Let
+	\begin{align*}
+		\hat{z}(f) &= e^{j \pi f} v(f) m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	Then,
+	\begin{align*}
+		m_z\left( \frac{f}{2} \right) &= e^{j \pi f} v(f) \overline{m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right)}\\
+		\therefore m_z(f) &= e^{j 2 \pi f} v(2 f) \overline{m_{\varphi}\left( f + \frac{1}{2} \right)}
+	\end{align*}
+	Hence, as all of $e^{j 2 \pi f}$, $v(2 f)$, and $m_{\varphi}\left( f + \frac{1}{2} \right)$ are periodic with period $1$, $m_z$ is also periodic with period $1$.
+	Hence, $z \in V_1$.\\
+	Also, $\forall k$,
+	\begin{align*}
+		\left\langle \varphi(t - k) , z \right\rangle &= \int\limits_{-\infty}^{\infty} z(t) \overline{\varphi(t - k)} \dif t\\
+		&= \int\limits_{-\infty}^{\infty} \hat{z}(f) e^{j 2 \pi f k} \overline{\hat{\varphi}(f)} \dif f\\
+		&= \sum\limits_{i = -\infty}^{\infty} \int\limits_{0}^{1} \hat{z}(f + i) e^{j 2 \pi f k} \overline{\hat{\varphi}(f + i)} \dif f\\
+		&= \sum\limits_{i = -\infty}^{\infty} \int\limits_{i}^{i + 1} \hat{z}(f) e^{j 2 \pi f k} \overline{\hat{\varphi}(f)} \dif f
+	\end{align*}
+	Let
+	\begin{align*}
+		Z(f) &= \sum\limits_{i = -\infty}^{\infty} \hat{z}(f + i) \overline{\hat{\varphi}(f + i)}
+	\end{align*}
+	Hence, $z \in {V_0}^{\perp}$ iff
+	\begin{align*}
+		\left\langle \varphi(t - k) , z \right\rangle &= 0\\
+		\iff \sum\limits_{i = -\infty}^{\infty} \int\limits_{i}^{i + 1} \hat{z}(f) e^{j 2 \pi f k} \overline{\hat{\varphi}(f)} \dif f &= 0\\
+		\iff \int\limits_{0}^{1} Z(f) e^{j 2 \pi k f} &= 0
+	\end{align*}
+	Also, $\int\limits_{0}^{1} Z(f) e^{j 2 \pi k f}$ are the DTFT coefficients of $Z$.
+	Hence, all DTFT coefficients can be zero iff
+	\begin{align*}
+		Z(f) &\equiv 0
+	\end{align*}
+	Therefore, $z \in {V_0}^{\perp}$ iff
+	\begin{align*}
+		\sum\limits_{i = -\infty}^{\infty} \hat{z}(f + i) \overline{\hat{\varphi}(f + 1)} &= 0
+	\end{align*}
+	As $z \in V_1$,
+	\begin{align*}
+		\hat{z}(f) &= m_z\left( \frac{f}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)\\
+		\hat{\varphi}(f) &= m_{\varphi}\left( \frac{f}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		Z(f) &= \sum\limits_{i = -\infty}^{\infty} m_z\left( \frac{f}{2} + \frac{i}{2} \right) \overline{m_{\varphi}\left( \frac{f}{2} + \frac{i}{2} \right)} \left| \hat{\varphi}\left( \frac{f}{2} + \frac{i}{2} \right) \right|^2\\
+		&= \quad \sum\limits_{i = -\infty}^{\infty} m_z\left( \frac{f}{2} + i \right) \overline{m_{\varphi}\left( \frac{f}{2} + i \right)} \left| \hat{\varphi}\left( \frac{f}{2} + i \right) \right|^2\\
+		&\quad + \sum\limits_{i = -\infty}^{\infty} m_z\left( \frac{f}{2} + i + \frac{1}{2} \right) \overline{m_{\varphi}\left( \frac{f}{2} + i + \frac{1}{2} \right)} \left| \hat{\varphi}\left( \frac{f}{2} + i + \frac{1}{2} \right) \right|^2\\
+		&= \quad m_z\left( \frac{f}{2} \right) \overline{m_{\varphi}\left( \frac{f}{2} \right)} \sum\limits_{i = -\infty}^{\infty} \left| \hat{\varphi}\left( \frac{f}{2} + i \right) \right|^2\\
+		&\quad + m_z\left( \frac{f}{2} + \frac{1}{2} \right) \overline{m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right)} \sum\limits_{i = -\infty}^{\infty} \left| \hat{\varphi}\left( \frac{f}{2} + i + \frac{1}{2} \right) \right|^2
+	\end{align*}
+	Hence, as the set $\left\{ \hat{\varphi}\left( \frac{f}{2} + i \right) \right\}$ is orthogonal,
+	\begin{align*}
+		Z(f) &= m_z\left( \frac{f}{2} \right) \overline{m_{\varphi}\left( \frac{f}{2} \right)} + m_z\left( \frac{f}{2} + \frac{1}{2} \right) \overline{m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right)}
+	\end{align*}
+	Hence, $z \in {V_0}^{\perp}$ iff
+	\begin{align*}
+		0 &= Z(f)\\
+		\iff 0 &= \left\langle \left( m_{\varphi}(f) , m_{\varphi}\left( f + \frac{1}{2} \right) \right) , \left( m_z(f) , m_z\left( f + \frac{1}{2} \right) \right) \right\rangle\\
+		\iff 0 &= \left\langle \left( m_{\varphi}(f) , m_{\varphi}\left( f + \frac{1}{2} \right) \right) , \left( -\overline{m_{\varphi}\left( f + \frac{1}{2} \right)} , \overline{m_{\varphi}(f)} \right) \right\rangle
+	\end{align*}
+	Let
+	\begin{align*}
+		M &= \left( m_{\varphi}(f) , m_{\varphi}\left( f + \frac{1}{2} \right) \right)
+	\end{align*}
+	Therefore, as $\left( m_z(f) , m_z\left( f + \frac{1}{2} \right) \right)$ and $\left( -\overline{m_{\varphi}\left( f + \frac{1}{2} \right)} , \overline{m_{\varphi}(f)} \right)$ are orthogonal to $M$, they are collinear, as long as $M \neq 0$.
+	Also,
+	\begin{align*}
+		\|M\| &= \left| m_{\varphi}(f) \right|^2 + \left| m_{\varphi}\left( f + \frac{1}{2} \right) \right|^2\\
+		&= 1
+	\end{align*}
+	Therefore, $M \neq 0$.
+	Hence, $\exists \alpha(f)$ such that
+	\begin{align*}
+		m_z(f) &= \alpha(f) \overline{m_{\varphi}\left( f + \frac{1}{2} \right)}\\
+		m_z\left( f + \frac{1}{2} \right) &= -\alpha(f) \overline{m_{\varphi}(f)}
+	\end{align*}
+	iff $z \in {V_0}^{\perp}$.
+	Therefore,
+	\begin{align*}
+		m_z(f) &= \alpha(f) \overline{m_{\varphi}\left( f + \frac{1}{2} \right)}\\
+		\therefore m_z\left( f + \frac{1}{2} \right) &= \alpha\left( f + \frac{1}{2} \right) \overline{m_{\varphi}(f)}\\
+		m_z\left( f + \frac{1}{2} \right) &= -\alpha(f) \overline{m_{\varphi}(f)}
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\alpha\left( f + \frac{1}{2} \right) &= -\alpha(f)
+	\end{align*}
+	Let
+	\begin{align*}
+		h(f) &= e^{-j 2 \pi f} \alpha(f)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		v(f) &= h\left( \frac{f}{2} \right)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		v(f + 1) &= h\left( \frac{f + 1}{2} \right)\\
+		&= e^{-j 2 \pi \frac{f + 1}{2}} \alpha\left( \frac{f}{2} + \frac{1}{2} \right)\\
+		&= e^{-j \pi f} e^{-j \pi} \left( -\alpha\left( \frac{f}{2} \right) \right)\\
+		&= e^{j 2 \pi \frac{f}{2}} \alpha\left( \frac{f}{2} \right)\\
+		&= h\left( \frac{f}{2} \right)\\
+		&= v(f)
+	\end{align*}
+	Therefore, $z \in {V_0}^{\perp}$ iff
+	\begin{align*}
+		m_z(f) &= e^{j 2 \pi f} h(f) \overline{m_{\varphi}\left( f + \frac{1}{2} \right)}\\
+		m_z\left( \frac{f}{2} \right) &= e^{j \pi f} v(f) \overline{m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right)}
+	\end{align*}
+\end{proof}
 
 \clearpage
 \printindex
