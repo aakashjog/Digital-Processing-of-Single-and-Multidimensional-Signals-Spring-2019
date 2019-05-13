@@ -2801,6 +2801,216 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\end{align*}
 \end{proof}
 
+\begin{theorem}
+	For a $z \in W_0$, such that
+	\begin{align*}
+		\hat{z}(f) &= e^{j \pi f} v(f) m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right) \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	the set $\left\{ z(t - k) \right\}$ is orthogonal if
+	\begin{align*}
+		\left| v(f) \right| &= 1
+	\end{align*}
+	where
+\end{theorem}
+
+\begin{theorem}
+	If
+	\begin{align*}
+		\hat{\psi}(f) &= e^{j \pi f} v(f) \overline{m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right)} \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	and $v(f)$ is periodic with period $1$ and satisfies,
+	\begin{align*}
+		\left| v(f) \right| &= 1
+	\end{align*}
+	then $\psi(t)$ is the mother wavelet for a set of orthogonal wavelets if $v(f)$ is periodic with period $1$ and
+\end{theorem}
+
+\begin{theorem}
+	Assuming $m_{\varphi}(f)$ is bounded around $\frac{1}{2}$,
+	\begin{align*}
+		\hat{\psi}(2 k) &= 0
+	\end{align*}
+	for all $k \in \mathbb{Z}$.
+\end{theorem}
+
+\begin{proof}
+	\begin{align*}
+		\left| \hat{\psi}(2 k) \right| &= \left| e^{j 2 \pi k} v(2 k) \overline{m_{\varphi}\left( k + \frac{1}{2} \right)} \hat{\varphi}(k) \right|
+	\end{align*}
+	Also,
+	\begin{align*}
+		m_{\varphi}\left( \frac{1}{2} \right) &= 0
+	\end{align*}
+	for $k = 0$, and
+	\begin{align*}
+		\hat{\varphi}(k) &= 0
+	\end{align*}
+	for $k \neq 0$.\\
+	Hence,
+	\begin{align*}
+		\hat{\psi}(2 k) &= 0
+	\end{align*}
+\end{proof}
+
+\section{Wavelet Transform}
+
+\begin{theorem}
+	Assuming $\varphi(t)$ has a bounded support,
+	\begin{align*}
+		\varphi(t) &= \sum\limits_{n = 0}^{2 T - 1} a_n \varphi(2 t - n)\\
+		\psi(t) &= \sum\limits_{n = 0}^{2 T - 1} b_n \varphi(2 t - n)
+	\end{align*}
+	where
+	\begin{align*}
+		a_n &= \left\langle \varphi\left( \frac{t}{2} \right) , \varphi(t - n) \right\rangle\\
+		b_n &= \left\langle \psi\left( \frac{t}{2} \right) , \varphi(t - n) \right\rangle
+	\end{align*}
+\end{theorem}
+
+\begin{proof}
+	Let
+	\begin{align*}
+		v(f) &= e^{-j 2 \pi f T}
+	\end{align*}
+	where $T \in \mathbb{Z}$.
+	Hence,
+	\begin{align*}
+		\left| v(f) \right| &= 1
+	\end{align*}
+	and is periodic with period $1$.
+	Therefore,
+	\begin{align*}
+		\hat{\psi(f)} &= e^{j \pi f} v(f) \overline{m_{\varphi}\left( \frac{f}{2} + \frac{1}{2} \right)} \hat{\varphi}\left( \frac{f}{2} \right)\\
+		&= e^{j \pi f} e^{-j 2 \pi f T} \frac{1}{2} \sum\limits_{n = -\infty}^{\infty} \overline{a_n} e^{j 2 \pi n \left( \frac{f}{2} + \frac{1}{2} \right)} \hat{\varphi}\left( \frac{f}{2} \right)\\
+		&= \frac{1}{2} \sum\limits_{n = -\infty}^{\infty} e^{j \pi n f + j \pi n + j \pi f + j 2 \pi f T} \hat{\varphi}\left( \frac{f}{2} \right)\\
+		&= \frac{1}{2} \sum\limits_{n = -\infty}^{\infty} (-1)^n \overline{a_n} e^{j 2 \pi \frac{f}{2} (n + 1 + 2 T)} \hat{\varphi}\left( \frac{f}{2} \right)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\psi(t) &= \sum\limits_{n = -\infty}^{\infty} (-1)^n \overline{a_n} \varphi(2 t + n + 1 + 2 T)
+	\end{align*}
+	Hence, replacing $T$ by $-T$,
+	\begin{align*}
+		\psi(t) &= \sum\limits_{n = -\infty}^{\infty} (-1)^n \overline{a_n} \varphi(2 t + n + 1 - 2 T)
+	\end{align*}
+	Hence, let
+	\begin{align*}
+		-n' &= n + 1 - 2 T\\
+		\therefore n &= -n' + 2 T - 1
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\psi(t) &= \sum\limits_{n' = -\infty}^{\infty} (-1)^{-n' + 2 T - 1} \overline{a_{2 T - 1 - n}} \varphi(2 t - n)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\psi(t) &= -\sum\limits_{n = -\infty}^{\infty} (-1)^n \overline{a_{2 T - 1 - n}} \varphi(2 t - n)
+	\end{align*}
+	Hence, as $\varphi(t)$ has a bounded support, let $a_n = 0$ for all $n \ge 2 T$ and $n < 0$.\\
+	Let
+	\begin{align*}
+		b_n &= (-1)^{n + 1} \overline{a_{2 T - 1 - n}}
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\varphi(t) &= \sum\limits_{n = 0}^{2 T - 1} a_n \varphi(2 t - n)\\
+		\psi(t) &= -\sum\limits_{n = 0}^{2 T - 1} (-1)^n \overline{a_{2 T - 1 - n}} \varphi(2 t - n)\\
+		&= \sum\limits_{n = 0}^{2 T - 1} b_n \varphi(2 t - n)
+	\end{align*}
+	Hence, equivalently,
+	\begin{align*}
+		a_n &= \left\langle \varphi\left( \frac{t}{2} \right) , \varphi(t - n) \right\rangle\\
+		b_n &= \left\langle \psi\left( \frac{t}{2} \right) , \varphi(t - n) \right\rangle
+	\end{align*}
+\end{proof}
+
+\section{Wavelets for Digital Systems}
+
+\begin{theorem}
+	Let $f \in V_i$, such that
+	\begin{align*}
+		f(t) &= \sum\limits_{n = -\infty}^{\infty} \alpha_n 2^{\frac{i}{2}} \varphi\left( 2^i t - n \right)
+	\end{align*}
+	Let
+	\begin{align*}
+		a_n &= \left\langle \varphi\left( \frac{t}{2} \right) , \varphi(t - n) \right\rangle\\
+		b_n &= \left\langle \psi\left( \frac{t}{2} \right) , \varphi(t - n) \right\rangle
+	\end{align*}
+	Then,
+	\begin{align*}
+		f(t) &= \sum\limits_{n = -\infty}^{\infty} \gamma_n 2^{\frac{i - 1}{2}} \varphi\left( 2^{i - 1} t - n \right) + \sum\limits_{n = -\infty}^{\infty} \beta_n 2^{\frac{i - 1}{2}} \psi\left( 2^{i - 1} t - n \right)
+	\end{align*}
+	where
+	\begin{align*}
+		\gamma_n &= \sum\limits_{k = -\infty}^{\infty} \overline{\alpha_k} a_{k - 2 n}\\
+		\beta_n &= \sum\limits_{k = -\infty}^{\infty} \overline{\alpha_k} b_{k - 2 n}
+	\end{align*}
+\end{theorem}
+
+\begin{proof}
+	Let
+	\begin{align*}
+		f(t) &= \sum\limits_{n = -\infty}^{\infty} \alpha_n 2^{\frac{i}{2}} \varphi\left( 2^i t - n \right)
+	\end{align*}
+	Also,
+	\begin{align*}
+		V_i &= V_{i - 1} \oplus W_{i - 1}
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		f(t) &= \sum\limits_{n = -\infty}^{\infty} \gamma_n 2^{\frac{i - 1}{2}} \varphi\left( 2^{i - 1} t - n \right) + \sum\limits_{n = -\infty}^{\infty} \beta_n 2^{\frac{i - 1}{2}} \psi\left( 2^{i - 1} t - n \right)
+	\end{align*}
+	where
+	\begin{align*}
+		\gamma_n &= \left\langle f , 2^{\frac{i - 1}{2}} \varphi\left( 2^{i - 1} t - n \right) \right\rangle\\
+		\beta_n &= \left\langle f , 2^{\frac{i - 1}{2}} \psi\left( 2^{i - 1} t - n \right) \right\rangle
+	\end{align*}
+	Hence, substituting
+	\begin{align*}
+		f(t) &= \sum\limits_{n = -\infty}^{\infty} \alpha_n 2^{\frac{i}{2}} \varphi\left( 2^i t - n \right)\\
+		\varphi(t) &= \sum\limits_{n = -\infty}^{\infty} a_n \varphi(2 t - n)
+	\end{align*}
+	in $\gamma_n$,
+	\begin{align*}
+		\gamma_n &= \left\langle \sum\limits_{k = -\infty}^{\infty} \alpha_k 2^{\frac{i}{2}} \varphi\left( 2^i t - k \right) , \sum\limits_{k = -\infty}^{\infty} a_k 2^{\frac{i}{2}} \varphi\left( 2^i t - k - 2 n \right) \right\rangle
+	\end{align*}
+	Also,
+	\begin{align*}
+		\varphi\left( 2^{i - 1} t - n \right) &= \varphi\left( 2^{i - 1} \left( t - \frac{n}{2^{i - 1}} \right) \right)\\
+		&= \sum\limits_{k = -\infty}^{\infty} a_k \sqrt{2} \varphi\left( 2^i \left( t - \frac{n}{2^{i - 1}} \right) - k \right)\\
+		&= \sum\limits_{k = -\infty}^{\infty} a_k \sqrt{2} \varphi\left( 2^i t - 2 n - k \right)
+	\end{align*}
+	Let
+	\begin{align*}
+		-k' &= -2 n - k\\
+		\therefore k &= k' - 2 n
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\varphi\left( 2^{i - 1} t - n \right) &= \sum\limits_{k = -\infty}^{\infty} a_k \sqrt{2} \varphi\left( 2^i t - 2 n - k \right)\\
+		&= \sum\limits_{k' = -\infty}^{\infty} a_{k' - 2 n} \sqrt{2} \varphi\left( 2^i t - k' \right)
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\gamma_n &= \left\langle \sum\limits_{k = -\infty}^{\infty} \alpha_k 2^{\frac{i}{2}} \varphi\left( 2^i t - k \right) , \sum\limits_{k = -\infty}^{\infty} a_{k - 2 n} 2^{\frac{i}{2}} \varphi\left( 2^i t - k \right) \right\rangle\\
+		&= \sum\limits_{k = -\infty}^{\infty} \overline{\alpha_k} a_{k - 2 n}
+	\end{align*}
+	Similarly,
+	\begin{align*}
+		\beta_n &= \sum\limits_{k = -\infty}^{\infty} \overline{\alpha_k} b_{k - 2 n}
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	Let ${\gamma_n}^i$ be the coefficients of the scaling function $\varphi(t)$ at the $i$th level, and let and ${\beta_n}^i$ be the coefficients of the mother wavelet $\psi(t)$ at the $i$th level, i.e. coefficients corresponding to $\varphi\left( 2^i t - n \right) \in V_i$ and $\psi\left( 2^i t - n \right) \in W_{i}$.
+	Then,
+	\begin{align*}
+		{\gamma_n}^{i - 1} &= \overline{{\gamma_k}^i} a_{k - 2 n}\\
+		{\beta}^{i - 1} &= \overline{{\gamma_k}^i} b_{k - 2 n}
+	\end{align*}
+\end{theorem}
+
+
 \clearpage
 \printindex
 
