@@ -3449,6 +3449,7 @@ If $k > 1$, then
 	y &= \sum\limits_{i \in T} \alpha_i a_i
 \end{align*}
 where $T$ is the true support of $\alpha$.
+\index{thresholding}
 
 \subsubsection{Orthogonal Matching Pursuit (OMP)}
 
@@ -3467,6 +3468,7 @@ where $T$ is the true support of $\alpha$.
 	\end{algorithmic}
 	\caption{Orthogonal Matching Pursuit Algorithm}
 	\label{alg:OMP_algorithm}
+	\index{orthogonal matching pursuit}
 \end{algorithm}
 
 \begin{definition}[Coherence]
@@ -3474,6 +3476,7 @@ where $T$ is the true support of $\alpha$.
 	\begin{align*}
 		\mu(A) &= \max\left| {a_i}^* a_j \right|
 	\end{align*}
+	\index{coherence}
 \end{definition}
 
 \begin{theorem}
@@ -3494,6 +3497,8 @@ where $T$ is the true support of $\alpha$.
 	\begin{align*}
 		m &\ge c k^2
 	\end{align*}
+	\index{orthogonal matching pursuit}
+	\index{P@$P_{1,\varepsilon}$}
 \end{theorem}
 
 \subsection{Projected Gradient Descent}
@@ -3511,6 +3516,7 @@ where $\tilde{\alpha}$ can be obtained by iterative hard thresholding, i.e.
 	\alpha^{t + 1} &= [{\tilde{\alpha}}^{t + 1}]_k
 \end{align*}
 where $[ \cdot ]_k$ represents hard thresholding by $k$, i.e., $[x]_k$ consists of only the $k$ largest elements of $x$.
+\index{gradient descent!projected}
 
 \section{Dictionary Learning}
 
@@ -3519,6 +3525,8 @@ where $[ \cdot ]_k$ represents hard thresholding by $k$, i.e., $[x]_k$ consists 
 	\begin{align*}
 		\hat{\alpha} &= \min\limits_{\alpha} \frac{1}{2} {\left\| y - M D \alpha \right\|_2}^2 + \lambda \|\alpha\|_1
 	\end{align*}
+	\index{sparse representation}
+	\index{dictionary learning}
 \end{definition}
 
 \begin{theorem}
@@ -3529,6 +3537,7 @@ where $[ \cdot ]_k$ represents hard thresholding by $k$, i.e., $[x]_k$ consists 
 		\left( \hat{D},\left\{ \hat{\alpha_i}\right \} \right) &= \min\limits_{D,\{\alpha_i\}} F\left( D , \{\alpha_i\} \right)\\
 		&= \min\limits_{D,\{\alpha_i\}} \sum\limits_{i} \frac{1}{2} {\left\| x_i - D \alpha_i \right\|_2}^2 + \lambda \|\alpha_i\|_1
 	\end{align*}
+	\index{dictionary learning}
 \end{theorem}
 
 \subsection{Gradient Descent}
@@ -3549,6 +3558,7 @@ or using stochastic gradient descent, i.e.
 	D^{t + 1} &= D^t - \mu \nabla_D F_i\left( D^t , \hat{\alpha_i} \right)
 \end{align*}
 where $i$ is chosen randomly for each iteration.
+\index{gradient descent!stochastic}
 
 \subsection{Dictionary Learning Given Signal and Sparse Representation}
 
@@ -3574,6 +3584,8 @@ Hence,
 \begin{align*}
 	D &= X \Lambda^* \left( \Lambda \Lambda^* \right)^{-1}
 \end{align*}
+\index{dictionary learning}
+\index{sparse representation}
 
 \subsection{Proximal Gradient Algorithm}
 
@@ -3582,6 +3594,7 @@ Hence,
 	\begin{align*}
 		S_{\lambda}(z) &= \argmin\limits_{\alpha} \frac{1}{2} {\|z - \alpha\|_2}^2 + \lambda R(\alpha)
 	\end{align*}
+	\index{proximal map}
 \end{definition}
 
 The solution to the minimization problem
@@ -3598,6 +3611,7 @@ This solution converges to the solution of the original problem if
 	\mu &< \frac{2}{\|A\|_2}
 \end{align*}
 where $\|A\|_2$ is the spectral norm of $A$, i.e. the largest singular value of $A$.\\
+\index{gradient descent!proximal}
 
 \subsubsection{Iterative Soft Thresholding Algorithm}
 
@@ -3652,6 +3666,8 @@ Hence,
 		\end{cases}
 \end{align*}
 Such a function is called a soft thresholding function, and hence this algorithm is called the iterative soft thresholding algorithm.
+\index{thresholding!soft}
+\index{thresholding!iterative soft}
 
 \subsubsection{Iterative Hard Thresholding Algorithm}
 
@@ -3668,6 +3684,8 @@ then
 		\end{cases}
 \end{align*}
 However, as this problem is not convex, the solution of this problem is not guaranteed to converge.
+\index{thresholding!hard}
+\index{thresholding!iterative hard}
 
 \clearpage
 \part{Low Rank Model}
@@ -3678,6 +3696,7 @@ However, as this problem is not convex, the solution of this problem is not guar
 		Y &= M(X) + E
 	\end{align*}
 	where $X$ is the original signal and has low rank, $Y$ is the measured signal, and $E$ is the noise.
+	\index{low rank model}
 \end{definition}
 
 \section{Solution Using Singular Value Decomposition}
@@ -3731,6 +3750,8 @@ with
 \begin{align*}
 	X &= U \tilde{X} V^*
 \end{align*}
+\index{low rank model}
+\index{decomposition!singular value}
 
 \section{Solution Using Proximal Gradient}
 
@@ -3758,6 +3779,7 @@ Hence, the minimization problem is
 	\hat{X} &= {\argmin\limits_{X} \frac{1}{2} \left\| Y - M(X) \right\|_F}^2 + \lambda \|X\|_*
 \end{align*}
 This can be solved using the proximal gradient algorithm as for the sparsity problem.
+\index{gradient descent!proximal}
 
 \clearpage
 \printindex
