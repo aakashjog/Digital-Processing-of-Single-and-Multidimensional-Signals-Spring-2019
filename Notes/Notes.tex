@@ -114,6 +114,7 @@ pinstyle/.style = {pin edge={to-,thin,black}}
 \DeclareMathOperator{\vspan}{\mathrm{span}}
 
 \DeclareMathOperator{\argmin}{\mathrm{argmin}}
+\DeclareMathOperator{\argmax}{\mathrm{argmax}}
 
 \DeclareMathOperator{\Db}{\mathrm{Db}}
 
@@ -132,6 +133,8 @@ pinstyle/.style = {pin edge={to-,thin,black}}
 
 \DeclareMathOperator{\rank}{\mathrm{rank}}
 \DeclareMathOperator{\diag}{\mathrm{diag}}
+
+\DeclareMathOperator{\supp}{\mathrm{supp}}
 
 \def\transpose#1{{#1}^{\mathsf{T}}}
 \def\minustranspose#1{{#1}^{\mathsf{-T}}}
@@ -3010,6 +3013,751 @@ E-mail: \href{mailto:raja@tauex.tau.ac.il}{raja@tauex.tau.ac.il}\\
 	\end{align*}
 \end{theorem}
 
+\section{Applications of Wavelets}
+
+Let $W$ denote the wavelet operation.
+Hence, as $W$ is orthogonal, let $W^*$ be the inverse of $W$.
+
+Hence, for orthogonal Haar wavelets, the wavelet operation can be performed as in \cref{fig:filter_bank_implementation_of_1}.
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\node [block] (HP1) {
+			$
+			b_{-n} =
+			\begin{pmatrix}
+				-\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+			\end{pmatrix}
+			$
+		};
+
+		\node [block, right = of HP1] (downsampler_HP1) {$\downsample{2}$};
+
+		\node [block, below = of HP1] (LP1) {
+			$
+			a_{-n} =
+			\begin{pmatrix}
+				\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+			\end{pmatrix}
+			$
+		};
+
+		\node [block, right = of LP1] (downsampler_LP1) {$\downsample{2}$};
+
+		\node [block, right = of downsampler_LP1] (HP2) {
+			$
+			b_{-n} =
+			\begin{pmatrix}
+				-\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+			\end{pmatrix}
+			$
+		};
+
+		\node [block, right = of HP2] (downsampler_HP2) {$\downsample{2}$};
+
+		\node [block, below right = of downsampler_LP1] (LP2) {
+			$
+			a_{-n} =
+			\begin{pmatrix}
+				\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+			\end{pmatrix}
+			$
+		};
+
+		\node [block, right = of LP2] (downsampler_LP2) {$\downsample{2}$};
+
+		\begin{scope}[-stealth]
+			\draw ($ (HP1.west) + (-1,0) $) node [left] {$x$} -- ++(0.5,0) |- (HP1.west);
+			\draw ($ (HP1.west) + (-1,0) $) node [left] {$x$} -- ++(0.5,0) |- (LP1.west);
+			\draw (HP1.east) -- (downsampler_HP1.west);
+			\draw (downsampler_HP1.east) -- ++(1,0) node [right] {$\beta^{i - 1}$};
+			\draw (LP1.east) -- (downsampler_LP1.west);
+			\draw (downsampler_LP1.east) -- ++(0.5,0) -- (HP2.west);
+			\draw (downsampler_LP1.east) -- ++(0.5,0) |- (LP2.west);
+			\draw (HP2.east) -- (downsampler_HP2.west);
+			\draw (downsampler_HP2.east) -- ++(1,0) node [right] {$\beta^{i - 2}$};
+			\draw (LP2.east) -- (downsampler_LP2.west);
+			\draw (downsampler_LP2.east) -- ++(1,0) node [right] {$\gamma^{i - 2}$};
+		\end{scope}
+	\end{tikzpicture}
+	\caption{Filter Bank Implementation of 1-D Wavelet Transform}
+	\label{fig:filter_bank_implementation_of_1-D_wavelet_transform}
+\end{figure}
+Hence, for a $w \in \mathbb{R}^{4 \times 4}$, this is equivalent to multiplying $x$ by
+\begin{align*}
+	W &=
+		\begin{pmatrix}
+			\frac{1}{2} & \frac{1}{2} & \frac{1}{2} & \frac{1}{2}\\
+			\frac{1}{2} & \frac{1}{2} & -\frac{1}{2} & -\frac{1}{2}\\
+			\frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} & 0 & 0\\
+			0 & 0 & \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}}\\
+		\end{pmatrix}
+\end{align*}
+
+$W$ and $W^*$ are also called the analysis wavelet operation and synthesis wavelet operation, respectively.
+
+\begin{definition}[Wavelet frame]
+	Let $W \in \mathbb{R}^{p \times n}$ be a wavelet operation, where $p > n$.
+	Let $x \in \mathbb{R}^n$.
+	Hence, $W x \in \mathbb{R}^p$.
+	$W$ is said to be a wavelet frame if for all $x \in \mathbb{R}^n$,
+	\begin{equation*}
+		A {\|x\|_2}^2 \le {\|W x\|_2}^2 \le B {\|x\|_2}^2
+	\end{equation*}
+	\index{frame!wavelet}
+\end{definition}
+
+\begin{definition}[Tight wavelet frame]
+	A wavelet frame for which $A = B$ is called a tight wavelet frame.
+	\index{frame!wavelet!tight}
+\end{definition}
+
+\begin{definition}[Vanishing moments]
+	A function $g(t)$ is said to have $n$ vanishing moments if
+	\begin{align*}
+		\int\limits_{-\infty}^{\infty} t^k g(t) \dif t &= 0
+	\end{align*}
+	for $0 \le k < n$.
+	\index{vanishing moment}
+\end{definition}
+
+If the mother wavelet $\psi$ has $n$ vanishing moments, then it is orthogonal to all polynomials upto order $n$.
+Hence, $n - 1$th order polynomial functions are spanned by the scaling function only.
+Hence, the wavelet coefficients of smooth functions will be mostly zero in high frequencies.
+
+\subsection{Compression}
+
+If $W x$ has many zero coefficients in positions which can be predicted, this can be used for compression.
+
+\subsection{Denoising}
+
+Consider a noisy signal
+\begin{align*}
+	y &= x + n
+\end{align*}
+where
+\begin{align*}
+	n &\sim \normal\left( 0,\sigma^2 I \right)
+\end{align*}
+Assume $W x$ is sparse, i.e. $W x$ has at most $k$ non-zero coefficients.
+Then,
+\begin{align*}
+	W y &= W x + W n
+\end{align*}
+Let
+\begin{align*}
+	n' &= W n
+\end{align*}
+Therefore, as $n$ is Gaussian with zero mean and variance $\sigma$,
+\begin{align*}
+	\expct[n'] &= \expct[W n]\\
+	&= 0\\
+	\expct\left[ n' {n'}^* \right] &= \expct\left[ W n n^* W^* \right]\\
+	&= W \expct\left[ n n^* \right] W^*\\
+	&= W \sigma^2 I W^*\\
+	&= \sigma^2 I
+\end{align*}
+Hence,
+\begin{align*}
+	n' &\sim \normal\left( 0,\sigma^2 I \right)
+\end{align*}
+% Hence, a threshold can be applied to $W y$ to keep only the largest $k$ elements.
+If the locations $T_x$ of the $k$ non-zero elements in $W x$ are given, the reconstructed signal is
+\begin{align*}
+	\hat{x}_{\text{oracle}} &= W^* [W y]_{T_x}
+\end{align*}
+where
+\begin{align*}
+	[W y]_{T_x}[i] &=
+		\begin{cases}
+			x[i] &;\quad i \in T_x\\
+			0 &;\quad \text{otherwise}\\
+		\end{cases}
+\end{align*}
+Hence, in the oracle case, the error is
+\begin{align*}
+	\text{MSE} &= \expct\left[ {\left\| x - \hat{x}_{\text{oracle}} \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| W x - W \hat{x}_{\text{oracle}} \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| W x - [W y]_{T_x} \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| W x - [W x]_{T_x} - [n']_{T_x} \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| [n']_{T_x} \right\|_2}^2 \right]\\
+	&= k \sigma^2
+\end{align*}
+Hence, as the noise power in $y$ is $n \sigma^2$, and that in $\hat{x}_{\text{oracle}}$ is $k \sigma^2$, the oracle provides an improvement of $\frac{n}{k}$ in the SNR.\\
+However, in reality, as $T_x$ are not known, let $T_y$ be the positions of the $k$ largest elements in $W y$, and let
+\begin{align*}
+	\hat{x} &= W^* [W y]_{T_y}
+\end{align*}
+Therefore,
+\begin{align*}
+	\expct\left[ {\left\| \hat{x} - x \right\|_2}^2 \right] &= \expct\left[ {\left\| W \hat{x} - W x \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| [W y]_{T_y} - W x \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| [W x + n']_{T_y} - W x \right\|_2}^2 \right]\\
+\end{align*}
+If an element is in $T_x \cap T_y$,
+\begin{align*}
+	W y - W x &= W x + n' - W x\\
+	&= n'
+\end{align*}
+If an element is in $T_y \setminus T_x$, as $W_x = 0$ for all elements not in $T_x$,
+\begin{align*}
+	W y - W x &= W x + n' - W x\\
+	&= n'
+\end{align*}
+If an element is in $T_x \setminus T_y$, as $W_y = 0$ for all elements not in $T_y$,
+\begin{align*}
+	W y - W x &= -W x
+\end{align*}
+Therefore,
+\begin{align*}
+	\expct\left[ {\left\| \hat{x} - x \right\|_2}^2 \right] &= \expct\left[ {\left\| [W x + n' - W x]_{T_x \cap T_y} + [W x + n']_{T_y \setminus T_x} - [W x]_{T_x \setminus T_y} \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| [W x + n' - W x]_{T_x \cap T_y} + [n']_{T_y \setminus T_x} - [W x]_{T_x \setminus T_y} \right\|_2}^2 \right]\\
+	&= \expct\left[ {\left\| [n']_{T_x \cap T_y} \right\|_2}^2 \right] + \expct\left[ {\left\| [n']_{T_y \setminus T_x} \right\|_2}^2 \right] + \expct\left[ {\left\| [W x]_{T_x \setminus T_y} \right\|_2}^2 \right]
+\end{align*}
+Elements in $T_y \setminus T_x$ are selected only if the noise at those positions dominates the signal which ideally should have been selected, i.e. the signal corresponding to $T_x \setminus T_y$.
+Hence,
+\begin{align*}
+	{\left\| [n']_{T_y \setminus T_x} \right\|_2}^2 &\ge {\left\| [W y]_{T_x \setminus T_y} \right\|_2}^2
+\end{align*}
+Also,
+\begin{align*}
+	\expct\left[ {\left\| [W y]_{T_x \setminus T_y} \right\|_2}^2 \right] &= \expct\left[ {\left\| [W x]_{T_x \setminus T_y} + [n']_{T_x \setminus T_y} \right\|_2}^2 \right]\\
+	&=\quad \expct\left[ {\left\| [W x]_{T_x \setminus T_y} \right\|_2}^2 \right]\\
+	&\quad + 2 \expct\left[ \transpose{[W x]_{T_x \setminus T_y}} [n]_{T_x \setminus T_y} \right]\\
+	&\quad + \expct\left[ {\left\| [n]_{T_x \setminus T_y} \right\|_2}^2 \right]
+\end{align*}
+Also, for any $p$ and $q$,
+\begin{align*}
+	p q &\le \frac{p^2}{2} + \frac{q^2}{2}
+\end{align*}
+Therefore,
+\begin{align*}
+	\expct\left[ {\left| [W x]_{T_x \setminus T_y} \right|_2}^2 \right] &\le 2 \expct\left[ {\left| [n]_{T_y \setminus T_x} \right|_2}^2 \right]
+\end{align*}
+Therefore,
+\begin{align*}
+	\text{MSE} &= \expct\left[ {\left\| x - \hat{x} \right\|_2}^2 \right]\\
+	&\le 2 k \max\limits_{i} {{n'}_i}^2
+\end{align*}
+As the noise is real and Gaussian noise of dimension $d$,
+\begin{align*}
+	\expct\left[ \max\limits_{i} {{n'}_i}^2 \right] &\propto \log d
+\end{align*}
+Hence, solving,
+\begin{align*}
+	\text{MSE} &= k \sigma^2 \log d
+\end{align*}
+
+\clearpage
+\part{Sparsity}
+
+\section{General Linear Inverse Problem}
+
+\begin{definition}[General linear inverse problem]
+	The general linear inverse problem is defined as
+	\begin{align*}
+		y &= M(x) + e
+	\end{align*}
+	where $y$ is the measured data, $x$ is the original data, $M$ is the measurement operation, and $e$ is the noise.
+\end{definition}
+
+\section{Sparse Representations}
+
+\begin{definition}[$l_0$ pseudonorm]
+	The $l_0$ pseudonorm of a vector $\alpha$ is defined to be the number of non-zero elements of $\alpha$.
+	It is denoted by $\|\alpha\|_0$.
+	\index{l@$l_0$ pseudonorm}
+\end{definition}
+
+\begin{definition}[Sparse representation of vector]
+	A vector $x \in \mathbb{R}^d$ can be represented as
+	\begin{align*}
+		x &= D \alpha
+	\end{align*}
+	where $D \in \mathbb{R}^{d \times n}$ is called the dictionary and $\alpha \in \mathbb{R}$ is a sparse representation of $x$.\\
+	Hence, if $D$ is unitary, then
+	\begin{align*}
+		\alpha &= D^* x
+	\end{align*}
+	\index{sparse representation}
+\end{definition}
+
+\begin{theorem}
+	$\alpha$, the sparse representation of a vector $x$ is unique if every $2 k$ columns of $D$ are linearly independent, where
+	\begin{align*}
+		k &= \|\alpha\|_0
+	\end{align*}
+	\index{sparse representation}
+\end{theorem}
+
+\begin{proof}
+	Assume $\alpha_0$ is $k$-sparse and
+	\begin{align*}
+		\alpha_0 &\neq \alpha
+	\end{align*}
+	such that
+	\begin{align*}
+		D \alpha_0 &= D \alpha
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		D(\alpha - \alpha_0) &= 0
+	\end{align*}
+	where $\alpha - \alpha_0$ is $2 k$-sparse.
+	Hence, there exist $2 k$ columns in $D$ which are linearly independent.
+	Hence, the sparse representation $\alpha$ is unique if every $2 k$ columns in $D$ are linearly independent.
+\end{proof}
+
+\begin{theorem}
+	Let
+	\begin{align*}
+		y &= M x + e\\
+		&= M D \alpha + e\\
+		&= A \alpha + e
+	\end{align*}
+	Let $\hat{\alpha}$ be the solution to the $P_{0,\varepsilon}$ problem, i.e. let $\hat{\alpha}$ be the sparsest vector such that $M D \hat{\alpha}$ is at least $\varepsilon$ close to $y$, i.e.
+	\begin{align*}
+		\hat{\alpha} &= \min\limits_{\tilde{\alpha}} \left\| \tilde{\alpha} \right\|_0
+	\end{align*}
+	such that
+	\begin{align*}
+		\left| y - A \tilde{\alpha} \right|_2 &\le \varepsilon
+	\end{align*}
+	Then, then the optimal estimation of $x$ is
+	\begin{align*}
+		\hat{x} &= D \hat{\alpha}
+	\end{align*}
+	This problem is NP hard and hence must be solved using approximation algorithms as in \cref{sec:approximation_algorithms}.
+	\index{P@$P_{0,\varepsilon}$}
+\end{theorem}
+
+\subsection{Restricted Isometry Property}
+
+\begin{definition}[Restricted isometry property (RIP)]
+	A matrix $A$ is said to satisfy the restricted isometry property with $\delta_{2 k}$ if for any $2 k$-sparse vector $v$,
+	\begin{equation*}
+		(1 - \delta_{2 k}) {\|v\|_2}^2 \le {\|A v\|_2}^2 \le (1 + \delta_{2 k}) {\|v\|_2}^2
+	\end{equation*}
+	Also, if
+	\begin{align*}
+		\delta_{2 k} &< 1
+	\end{align*}
+	then every $2 k$ columns in $A$ are linearly independent.
+	Hence, equivalently, if $\delta_{2 k} < 1$, then $\hat{\alpha}$ is unique.
+	\index{restricted isometry property}
+	\index{RIP|see {restricted isometry property}}
+\end{definition}
+
+\begin{theorem}
+	Let $\hat{\alpha}$ be the solution to the $P_{0,\varepsilon}$ problem, i.e. let
+	\begin{align*}
+		\hat{\alpha} &= \min\limits_{\tilde{\alpha}} \left\| \tilde{\alpha} \right\|_0
+	\end{align*}
+	such that
+	\begin{align*}
+		\left| y - A \tilde{\alpha} \right|_2 &\le \varepsilon
+	\end{align*}
+	Then,
+	\begin{align*}
+		\left\| \alpha - \hat{\alpha} \right\|_2 &\le \frac{2 \varepsilon}{\sqrt{1 - \delta_{2 k}}}
+	\end{align*}
+	\index{P@$P_{0,\varepsilon}$}
+\end{theorem}
+
+\section{Approximation Algorithms}
+\label{sec:approximation_algorithms}
+
+\subsection{Relaxation Based Approximation}
+
+\begin{definition}[Relaxation of $P_{0,\varepsilon}$ to $P_{1,\varepsilon}$]
+	The relaxation of the $P_{0,\varepsilon}$ problem to the $P_{1,\varepsilon}$ is obtained by relaxation of the $l_0$ norm to the $l_1$ norm, i.e.
+	\begin{align*}
+		\hat{\alpha} &= \min\limits_{\tilde{\alpha}} \left\| \tilde{\alpha} \right\|_1
+	\end{align*}
+	such that
+	\begin{align*}
+		\left| y - A \tilde{\alpha} \right|_2 &\le \varepsilon
+	\end{align*}
+	\index{P@$P_{1,\varepsilon}$}
+\end{definition}
+
+\begin{theorem}
+	If
+	\begin{align*}
+		\delta_{2 k} &\le \frac{1}{\sqrt{2}}
+	\end{align*}
+	then
+	\begin{align*}
+		\left\| \hat{\alpha}_{l_1} - \alpha \right\|_2 &\le c \varepsilon
+	\end{align*}
+	where $c$ is a function of $\delta_{2 k}$.
+\end{theorem}
+
+\begin{theorem}
+	If $A \in \mathbb{R}^{m \times n}$ is a matrix with independent identically distributed random Gaussian or sub-Gaussian entries, and
+	\begin{align*}
+		m &\ge \frac{c' k}{\xi^2} \log n
+	\end{align*}
+	where $c'$ is a constant that depends on the distribution, then with very high probability,
+	\begin{align*}
+		\delta_{2 k} &\le \xi
+	\end{align*}
+\end{theorem}
+
+\subsection{Greedy Techniques}
+
+\subsubsection{Thresholding}
+
+Let
+\begin{align*}
+	\hat{T} &= \supp\left( A^* y , k \right)
+\end{align*}
+Then,
+\begin{align*}
+	\hat{\alpha}_{\hat{T}} &= {A_{\hat{T}}}^{\dagger}\\
+	&= \argmin\limits_{\tilde{\alpha}} {\left\| y - A_{\hat{T}} \tilde{\alpha}_{\hat{T}} \right\|_2}^2
+\end{align*}
+For $k = 1$ and $e = 0$,
+\begin{align*}
+	y &= A \alpha\\
+	&= a_i \alpha_i
+\end{align*}
+where $a_i$ is the $i$th column of $A$ and $\alpha_i$ is the $i$th element of $\alpha$.
+Let
+\begin{align*}
+	z &= A^* y
+\end{align*}
+Therefore, the $j$th element of $z$ is
+\begin{align*}
+	z_j &= {a_j}^* y\\
+	&= {a_j}^* a_i \alpha_i
+\end{align*}
+Hence, if
+\begin{align*}
+	\|a_j\|_2 &= 1
+\end{align*}
+then
+\begin{align*}
+	z_j &=
+		\begin{cases}
+			\alpha_i &;\quad j = i\\
+			\alpha_i {a_j}^* a_i &;\quad j \neq 1\\
+		\end{cases}
+\end{align*}
+If $k > 1$, then
+\begin{align*}
+	y &= \sum\limits_{i \in T} \alpha_i a_i
+\end{align*}
+where $T$ is the true support of $\alpha$.
+
+\subsubsection{Orthogonal Matching Pursuit (OMP)}
+
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+		\State{$r^1 \gets y$}
+		\State{$t \gets 1$}
+		\State{$T^0 \gets \emptyset$}
+		\While{$\left| T^t \right| \le k \And \left\| r^t \right\|_2 \le \varepsilon$}
+			\State{$i \gets \argmax\limits_{i} \left| {a_i}^* r^t \right|$}
+			\State{$T^t \gets T^{t - 1} \cup \{i\}$}
+			\State{$\alpha^t \gets \argmax\limits_{\tilde{\alpha}} {\left\| A_{T^t} \tilde{\alpha} - y \right\|_2}^2$}
+			\State{$r^{t + 1} \gets r^t - A \alpha^t$}\\
+			\State{$t \gets t + 1$}
+		\EndWhile
+	\end{algorithmic}
+	\caption{Orthogonal Matching Pursuit Algorithm}
+	\label{alg:OMP_algorithm}
+\end{algorithm}
+
+\begin{definition}[Coherence]
+	The coherence of $A$ is defined to be
+	\begin{align*}
+		\mu(A) &= \max\left| {a_i}^* a_j \right|
+	\end{align*}
+\end{definition}
+
+\begin{theorem}
+	In the noiseless case,
+	\begin{align*}
+		y &= A x
+	\end{align*}
+	and if
+	\begin{align*}
+		k &\le \frac{1}{2} \left( 1 + \frac{1}{\mu(A)} \right)
+	\end{align*}
+	where $\mu(A)$ is the coherence of $A$, then assuming the columns of $A$ are normalized, the OMP and $P_{1,\varepsilon}$ approximations are guaranteed to find the sparsest solution.
+	In the noisy case of
+	\begin{align*}
+		y &= A \alpha + e
+	\end{align*}
+	where $y \in \mathbb{R}^m$ and $\alpha \in \mathbb{R}^n$, these conditions can be satisfied only if
+	\begin{align*}
+		m &\ge c k^2
+	\end{align*}
+\end{theorem}
+
+\subsection{Projected Gradient Descent}
+
+\begin{align*}
+	\hat{\alpha} &= \min\limits_{\tilde{\alpha}} {\left\| y - A \tilde{\alpha} \right\|_2}^2
+\end{align*}
+such that
+\begin{align*}
+	\left\| \tilde{\alpha} \right\|_0 &\le k
+\end{align*}
+where $\tilde{\alpha}$ can be obtained by iterative hard thresholding, i.e.
+\begin{align*}
+	{\tilde{\alpha}}^{t + 1} &= \alpha^t - \mu \transpose{A} \left( A \alpha^t - y \right)\\
+	\alpha^{t + 1} &= [{\tilde{\alpha}}^{t + 1}]_k
+\end{align*}
+where $[ \cdot ]_k$ represents hard thresholding by $k$, i.e., $[x]_k$ consists of only the $k$ largest elements of $x$.
+
+\section{Dictionary Learning}
+
+\begin{definition}[Standard sparse coding]
+	The standard sparse representation of a signal $x = D \alpha$ is defined to be
+	\begin{align*}
+		\hat{\alpha} &= \min\limits_{\alpha} \frac{1}{2} {\left\| y - M D \alpha \right\|_2}^2 + \lambda \|\alpha\|_1
+	\end{align*}
+\end{definition}
+
+\begin{theorem}
+	Assume $M = I$.
+	Given a set of signals $\{x_i\}$, let $D$ be a dictionary which provides sparse representations $\{\alpha_i\}$ for the set $\{x_i\}$.
+	Then, $D$ and $\{\alpha_i\}$ are
+	\begin{align*}
+		\left( \hat{D},\left\{ \hat{\alpha_i}\right \} \right) &= \min\limits_{D,\{\alpha_i\}} F\left( D , \{\alpha_i\} \right)\\
+		&= \min\limits_{D,\{\alpha_i\}} \sum\limits_{i} \frac{1}{2} {\left\| x_i - D \alpha_i \right\|_2}^2 + \lambda \|\alpha_i\|_1
+	\end{align*}
+\end{theorem}
+
+\subsection{Gradient Descent}
+
+The minimization problem
+\begin{align*}
+	\left( \hat{D},\left\{ \hat{\alpha_i}\right \} \right) &= \min\limits_{D,\{\alpha_i\}} F\left( D , \{\alpha_i\} \right)\\
+	&= \min\limits_{D,\{\alpha_i\}} \sum\limits_{i} \frac{1}{2} {\left\| x_i - D \alpha_i \right\|_2}^2 + \lambda \|\alpha_i\|_1
+\end{align*}
+can be solved using gradient descent, i.e.
+\begin{align*}
+	D^{t + 1} &= D^t - \mu \nabla_D F\left( D , \{\alpha_i\} \right)\\
+	\alpha^{t + 1} &= \alpha^t - \mu \nabla_{\alpha_i} F\left( D , \{\alpha_i\} \right)
+\end{align*}
+or using stochastic gradient descent, i.e.
+\begin{align*}
+	\hat{\alpha_i} &= \argmin\limits_{\alpha_i} \frac{1}{2} {\left\| x_i - D^t \alpha_i \right\|_2}^2 + \lambda \|\alpha_i\|_1\\
+	D^{t + 1} &= D^t - \mu \nabla_D F_i\left( D^t , \hat{\alpha_i} \right)
+\end{align*}
+where $i$ is chosen randomly for each iteration.
+
+\subsection{Dictionary Learning Given Signal and Sparse Representation}
+
+Assume $\{x_i\}$ and $\{\alpha_i\}$ are known.
+Hence, let
+\begin{align*}
+	X &=
+		\begin{pmatrix}
+			x_1 & \dots & x_N\\
+		\end{pmatrix}\\
+	\Lambda &=
+		\begin{pmatrix}
+			\alpha_1 & \dots & \alpha_N\\
+		\end{pmatrix}
+\end{align*}
+Then the minimization problem is equivalent to
+\begin{align*}
+	\hat{D} &= \min\limits_{D} {\left\| X - D \Lambda \right\|_F}^2
+\end{align*}
+where $D \in \mathbb{R}^{d \times n}$, $\Lambda \in \mathbb{R}^{n \times N}$, $X \in \mathbb{R}^{d \times N}$, and $\|\cdot\|_F$ is the Frobinus norm.
+This minimization can be performed by differentiating the expression and equating to zero.
+Hence,
+\begin{align*}
+	D &= X \Lambda^* \left( \Lambda \Lambda^* \right)^{-1}
+\end{align*}
+
+\subsection{Proximal Gradient Algorithm}
+
+\begin{definition}[Proximal map of a function]
+	The proximal map of a function $R(\alpha)$ is defined to be
+	\begin{align*}
+		S_{\lambda}(z) &= \argmin\limits_{\alpha} \frac{1}{2} {\|z - \alpha\|_2}^2 + \lambda R(\alpha)
+	\end{align*}
+\end{definition}
+
+The solution to the minimization problem
+\begin{align*}
+	\tilde{\alpha} &= \argmin\limits_{\alpha} \frac{1}{2} {\|y - A \alpha\|_2}^2 + \lambda R(\alpha)
+\end{align*}
+where $R(\alpha)$ is called the regularization problem can be obtained using proximal gradient descent, i.e.
+\begin{align*}
+	{\tilde{\alpha}}^{t + 1} &= \alpha^t - \mu \transpose{A} \left( A \alpha^t - y \right)\\
+	\alpha^{t + 1} &= S_{\lambda \mu} \left( {\tilde{\alpha}}^{t + 1} \right)
+\end{align*}
+This solution converges to the solution of the original problem if
+\begin{align*}
+	\mu &< \frac{2}{\|A\|_2}
+\end{align*}
+where $\|A\|_2$ is the spectral norm of $A$, i.e. the largest singular value of $A$.\\
+
+\subsubsection{Iterative Soft Thresholding Algorithm}
+
+If the regularization function is
+\begin{align*}
+	R(\cdot) &= \|\cdot\|_1
+\end{align*}
+the proximal gradient minimization problem is
+\begin{align*}
+	\hat{\alpha} &= \argmin\limits_{\alpha} \frac{1}{2} {\|y - A \alpha\|_2}^2 + \lambda \|\alpha\|_1
+\end{align*}
+Hence, the proximal map for the $l_1$ norm is
+\begin{align*}
+	S_{\lambda}(z) &= \argmin\limits_{\alpha} \frac{1}{2} {\|z - \alpha\|_2}^2 + \lambda \|\alpha\|_1\\
+	&= \argmin\limits_{\alpha} \frac{1}{2} \sum\limits_{i} (z_i - \alpha_i)^2 + \lambda \lambda |\alpha_i|
+\end{align*}
+Hence, as this problem is separable, the solution can be calculated for each $\alpha_i$ separately, i.e.
+\begin{align*}
+	\hat{\alpha_i} &= \argmin\limits_{\alpha_i} \frac{1}{2} (z_i - \alpha_i)^2 + \lambda |\alpha_i|
+\end{align*}
+Hence, differentiating with respect to $\alpha_i$,
+\begin{align*}
+	\dod{\hat{\alpha_i}}{\alpha_i} &= \alpha_i - z_i + \lambda \dod{|\alpha_i|}{\alpha_i}
+\end{align*}
+Also,
+\begin{align*}
+	\dod{|\alpha_i|}{\alpha_i} &=
+		\begin{cases}
+			1 &;\quad \alpha_i > 0\\
+			-1 &;\quad \alpha_i < 0\\
+			(-1,1) &;\quad \alpha_i = 0\\
+		\end{cases}
+\end{align*}
+Hence, equating the derivative to $0$ and solving, if $z_i > \lambda$,
+\begin{align*}
+	\hat{\alpha_i} &= z_i - \lambda
+\end{align*}
+if $z_i < \lambda$,
+\begin{align*}
+	\hat{\alpha_i} &= z_i + \lambda
+\end{align*}
+and if $-\lambda \le z_i \le \lambda$,
+\begin{align*}
+	\hat{\alpha_i} &\in \left( -z_i \pm \lambda \right)
+\end{align*}
+Hence,
+\begin{align*}
+	S_{\lambda}(z_i) &=
+		\begin{cases}
+			0 &;\quad |z_i| < \lambda\\
+			z_i - \lambda \sgn(z_i) &;\quad \text{otherwise}\\
+		\end{cases}
+\end{align*}
+Such a function is called a soft thresholding function, and hence this algorithm is called the iterative soft thresholding algorithm.
+
+\subsubsection{Iterative Hard Thresholding Algorithm}
+
+Similar to the Iterative Soft Thresholding Algorithm, if
+\begin{align*}
+	R(\cdot) &= \|\cdot\|_0
+\end{align*}
+then
+\begin{align*}
+	S_{\lambda}(z_i) &=
+		\begin{cases}
+			0 &;\quad |z_i| < \lambda\\
+			z_i &;\quad \text{otherwise}\\
+		\end{cases}
+\end{align*}
+However, as this problem is not convex, the solution of this problem is not guaranteed to converge.
+
+\clearpage
+\part{Low Rank Model}
+
+\begin{definition}[Low rank model]
+	The low rank model is defined to be
+	\begin{align*}
+		Y &= M(X) + E
+	\end{align*}
+	where $X$ is the original signal and has low rank, $Y$ is the measured signal, and $E$ is the noise.
+\end{definition}
+
+\section{Solution Using Singular Value Decomposition}
+
+Assume $M = I$.
+Hence,
+\begin{align*}
+	Y &= X + E
+\end{align*}
+Therefore, the reconstructed signal is
+\begin{align*}
+	\hat{X} &= \argmin\limits_{X} {\|X - Y\|_2}^2
+\end{align*}
+such that
+\begin{align*}
+	\rank(X) &\le r
+\end{align*}
+Let the singular value decomposition of $Y$ be
+\begin{align*}
+	Y &= U \Sigma_Y V^*
+\end{align*}
+where $U$ and $V$ are unitary matrices, and $\Sigma$ is a diagonal matrix with $\sigma_i$s, the eigenvalues of $Y$ as the diagonal elements.
+Hence, as the rank of a matrix is equal to the number of its non-zero singular values,
+\begin{align*}
+	\rank(X) &= \left\| \diag(\Sigma_X) \right\|_0
+\end{align*}
+where $\Sigma_X$ is the $\Sigma$ from the SVD of $X$.
+Hence,
+\begin{align*}
+	{\|X - Y\|_F}^2 &= {\left\| U^* (X - Y) V \right\|_F}^2\\
+	&= {\left\| U^* X V - U^* Y V \right\|_F}^2\\
+	&= {\left\| U^* X V - \Sigma_Y \right\|_F}^2
+\end{align*}
+Also, as $U$ and $V$ are unitary,
+\begin{align*}
+	\rank(X) &= \rank(U^* X V)
+\end{align*}
+Let
+\begin{align*}
+	\tilde{X} &= U^* X V
+\end{align*}
+Then, solving the original minimization problem is equivalent to solving
+\begin{align*}
+	\hat{\tilde{X}} &= \argmin\limits_{\tilde{X}} {\left\| \tilde{X} - \Sigma_Y \right\|_2}^2
+\end{align*}
+such that
+\begin{align*}
+	\rank\left( \tilde{X} \right) &\le r
+\end{align*}
+with
+\begin{align*}
+	X &= U \tilde{X} V^*
+\end{align*}
+
+\section{Solution Using Proximal Gradient}
+
+\begin{align*}
+	Y &= M(X) + E
+\end{align*}
+Hence, the minimization problem is
+\begin{align*}
+	\hat{X} &= \argmin\limits_{X} {\|X - Y\|_2}^2
+\end{align*}
+such that
+\begin{align*}
+	\rank(X) &\le r
+\end{align*}
+Hence, as
+\begin{align*}
+	\rank(X) &= \left\| \diag(\Sigma_X) \right\|_0
+\end{align*}
+Hence, as with the sparsity model, relaxing the minimization problem from the $l_0$ norm to the $l_1$ norm, the nuclear norm of $X$ can be defined as
+\begin{align*}
+	\|X\|_* &= \sum \sigma_i
+\end{align*}
+Hence, the minimization problem is
+\begin{align*}
+	\hat{X} &= {\argmin\limits_{X} \frac{1}{2} \left\| Y - M(X) \right\|_F}^2 + \lambda \|X\|_*
+\end{align*}
+This can be solved using the proximal gradient algorithm as for the sparsity problem.
 
 \clearpage
 \printindex
